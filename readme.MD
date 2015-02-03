@@ -1,2 +1,3 @@
-#this is README
-Syntax Highlighter: http://fifesoft.com/rsyntaxtextarea/
+Simple Text editor using eclipse SWT.
+
+Currently work in progress.
