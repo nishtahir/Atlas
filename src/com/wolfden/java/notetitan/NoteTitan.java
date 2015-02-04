@@ -1,37 +1,37 @@
 package com.wolfden.java.notetitan;
 
+import java.util.ResourceBundle;
+
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.Bullet;
 import org.eclipse.swt.custom.LineBackgroundEvent;
 import org.eclipse.swt.custom.LineBackgroundListener;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
-import org.eclipse.swt.custom.ST;
-import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.graphics.GlyphMetrics;
-import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.Label;
 
 public class NoteTitan implements ShellListener, VerifyKeyListener,
 		LineStyleListener, LineBackgroundListener, ModifyListener {
-	private static String AppName = "Note Titan";
+	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("com.wolfden.java.notetitan.messages"); //$NON-NLS-1$
+	private static String AppName = BUNDLE.getString("NoteTitan.appName");
+	private static final int DEFAULT_WINDOW_WIDTH = 640;
+	private static final int DEFAULT_WINDOW_HEIGHT = 480;
 
 	protected Shell shlNoteTitan;
 
@@ -69,27 +69,28 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 	 */
 	protected void createContents() {
 		shlNoteTitan = new Shell();
-		shlNoteTitan.setSize(450, 300);
-		shlNoteTitan.setText("Note Titan - Untitled");
-		shlNoteTitan.setLayout(new GridLayout(2, false));
+		shlNoteTitan.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
+		shlNoteTitan.setText(AppName + " - Untitled");
+		shlNoteTitan.setLayout(new GridLayout(1, false));
 
 		Menu menu = new Menu(shlNoteTitan, SWT.BAR);
 		shlNoteTitan.setMenuBar(menu);
 
 		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
-		mntmFile.setText("File");
+		mntmFile.setText(BUNDLE.getString("NoteTitan.mntmFile.text")); //$NON-NLS-1$
 
 		Menu menu_1 = new Menu(mntmFile);
 		mntmFile.setMenu(menu_1);
 
 		MenuItem mntmNew = new MenuItem(menu_1, SWT.NONE);
-		mntmNew.setText("New");
+		mntmNew.setText(BUNDLE.getString("NoteTitan.mntmNew.text")); //$NON-NLS-1$
 
 		MenuItem mntmOpen = new MenuItem(menu_1, SWT.NONE);
-		mntmOpen.setText("Open...");
+		mntmOpen.addSelectionListener(new Open());
+		mntmOpen.setText(BUNDLE.getString("NoteTitan.mntmOpen.text")); //$NON-NLS-1$
 
 		MenuItem mntmSave = new MenuItem(menu_1, SWT.NONE);
-		mntmSave.setText("Save");
+		mntmSave.setText(BUNDLE.getString("NoteTitan.mntmSave.text")); //$NON-NLS-1$
 
 		MenuItem mntmQuit = new MenuItem(menu_1, SWT.NONE);
 		mntmQuit.addSelectionListener(new SelectionAdapter() {
@@ -98,62 +99,19 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 
 			}
 		});
-		mntmQuit.setText("Quit");
+		mntmQuit.setText(BUNDLE.getString("NoteTitan.mntmQuit.text")); //$NON-NLS-1$
 
 		MenuItem mntmEdit = new MenuItem(menu, SWT.NONE);
-		mntmEdit.setText("Edit");
+		mntmEdit.setText(BUNDLE.getString("NoteTitan.mntmEdit.text")); //$NON-NLS-1$
 
 		MenuItem mntmView = new MenuItem(menu, SWT.NONE);
-		mntmView.setText("View");
-
-		MenuItem mntmAbout = new MenuItem(menu, SWT.NONE);
-		mntmAbout.setText("About");
-
-		final StyledText styledText = new StyledText(shlNoteTitan, SWT.BORDER
-				| SWT.MULTI | SWT.V_SCROLL | SWT.H_SCROLL);
-		styledText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-			}
-		});
-
-		// Java SWT show Line numbers for StyledText
-		// http://stackoverflow.com/questions/11057442/java-swt-show-line-numbers-for-styledtext
-
-		styledText.addLineStyleListener(new LineStyleListener() {
-			public void lineGetStyle(LineStyleEvent event) {
-
-				Device device = Display.getCurrent();
-				final RGB LINE_NUMBER_BG = new RGB(160, 80, 0); // brown
-				final RGB LINE_NUMBER_FG = new RGB(255, 255, 255); // white
-				event.bulletIndex = styledText
-						.getLineAtOffset(event.lineOffset);
-
-				// Set the style, 12 pixels wide for each digit
-				StyleRange style = new StyleRange();
-				style.metrics = new GlyphMetrics(0, 0, Integer.toString(
-						styledText.getLineCount() + 2).length() * 12);
-
-				style.background = new Color(device, LINE_NUMBER_BG);
-				style.foreground = new Color(device, LINE_NUMBER_FG);
-				// Create and set the bullet
-				event.bullet = new Bullet(ST.BULLET_NUMBER, style);
-			}
-		});
-		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
-				2, 1));
-
-		final Label lblLine = new Label(shlNoteTitan, SWT.NONE);
-		lblLine.setText("Line: 1234");
-
-		final Label lblColumn = new Label(shlNoteTitan, SWT.NONE);
-		lblColumn.setText(", Characters: 1234");
-
-		styledText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				lblLine.setText("Line: " + styledText.getLineCount());
-				lblColumn.setText(", Characters: " + styledText.getCharCount());
-			}
-		});
+		mntmView.setText(BUNDLE.getString("NoteTitan.mntmView.text")); //$NON-NLS-1$
+		
+		StyledText styledText = new StyledText(shlNoteTitan, SWT.BORDER);
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+		
+		Label lblNewLabel = new Label(shlNoteTitan, SWT.NONE);
+		lblNewLabel.setText(BUNDLE.getString("NoteTitan.lblNewLabel.text")); //$NON-NLS-1$
 	}
 
 	@Override
@@ -208,5 +166,59 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 	public void modifyText(ModifyEvent e) {
 		// TODO Text has been modified. Do not quit without saving
 
+	}
+	
+	//=============================================================
+	
+	/**
+	 * Strategy pattern to manage selection code 
+	 * @author Nish
+	 *
+	 */
+	class New implements SelectionListener{
+		
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	class Open implements SelectionListener{
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			FileDialog fileDialog = new FileDialog (shlNoteTitan, SWT.OPEN);
+		      fileDialog.setText("Open...");
+		      //fileDialog.setFilterPath(path); 
+		      fileDialog.open();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			
+		}
+		
+	}
+	
+	class Save implements SelectionListener{
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			
+		}
+		
 	}
 }
