@@ -1,5 +1,7 @@
 package com.wolfden.java.notetitan;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ResourceBundle;
 
 import org.eclipse.swt.SWT;
@@ -24,15 +26,19 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 
 public class NoteTitan implements ShellListener, VerifyKeyListener,
 		LineStyleListener, LineBackgroundListener, ModifyListener {
-	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("com.wolfden.java.notetitan.messages"); //$NON-NLS-1$
+	private static final ResourceBundle BUNDLE = ResourceBundle
+			.getBundle("com.wolfden.java.notetitan.messages"); //$NON-NLS-1$
 	private static String AppName = BUNDLE.getString("NoteTitan.appName");
 	private static final int DEFAULT_WINDOW_WIDTH = 640;
 	private static final int DEFAULT_WINDOW_HEIGHT = 480;
 
+	private String filePath;
+	private StyledText styledText;
 	protected Shell shlNoteTitan;
 
 	/**
@@ -71,7 +77,13 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		shlNoteTitan = new Shell();
 		shlNoteTitan.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 		shlNoteTitan.setText(AppName + " - Untitled");
-		shlNoteTitan.setLayout(new GridLayout(1, false));
+		GridLayout gl_shlNoteTitan = new GridLayout(1, false);
+		gl_shlNoteTitan.horizontalSpacing = 0;
+		gl_shlNoteTitan.verticalSpacing = 2;
+		gl_shlNoteTitan.marginBottom = 2;
+		gl_shlNoteTitan.marginWidth = 0;
+		gl_shlNoteTitan.marginHeight = 0;
+		shlNoteTitan.setLayout(gl_shlNoteTitan);
 
 		Menu menu = new Menu(shlNoteTitan, SWT.BAR);
 		shlNoteTitan.setMenuBar(menu);
@@ -101,16 +113,33 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		});
 		mntmQuit.setText(BUNDLE.getString("NoteTitan.mntmQuit.text")); //$NON-NLS-1$
 
-		MenuItem mntmEdit = new MenuItem(menu, SWT.NONE);
+		MenuItem mntmEdit = new MenuItem(menu, SWT.CASCADE);
 		mntmEdit.setText(BUNDLE.getString("NoteTitan.mntmEdit.text")); //$NON-NLS-1$
+
+		Menu menu_2 = new Menu(mntmEdit);
+		mntmEdit.setMenu(menu_2);
+
+		MenuItem mntmCut = new MenuItem(menu_2, SWT.NONE);
+		mntmCut.setText(BUNDLE.getString("NoteTitan.mntmCut.text")); //$NON-NLS-1$
+
+		MenuItem mntmCopy = new MenuItem(menu_2, SWT.NONE);
+		mntmCopy.setText(BUNDLE.getString("NoteTitan.mntmCopy.text")); //$NON-NLS-1$
+
+		MenuItem mntmPaste = new MenuItem(menu_2, SWT.NONE);
+		mntmPaste.setText(BUNDLE.getString("NoteTitan.mntmPaste.text")); //$NON-NLS-1$
 
 		MenuItem mntmView = new MenuItem(menu, SWT.NONE);
 		mntmView.setText(BUNDLE.getString("NoteTitan.mntmView.text")); //$NON-NLS-1$
-		
-		StyledText styledText = new StyledText(shlNoteTitan, SWT.BORDER);
-		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-		
+
+		styledText = new StyledText(shlNoteTitan, SWT.NONE);
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
+				1, 1));
+
 		Label lblNewLabel = new Label(shlNoteTitan, SWT.NONE);
+		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
+				false, 1, 1);
+		gd_lblNewLabel.horizontalIndent = 5;
+		lblNewLabel.setLayoutData(gd_lblNewLabel);
 		lblNewLabel.setText(BUNDLE.getString("NoteTitan.lblNewLabel.text")); //$NON-NLS-1$
 	}
 
@@ -167,58 +196,61 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		// TODO Text has been modified. Do not quit without saving
 
 	}
-	
-	//=============================================================
-	
-	/**
-	 * Strategy pattern to manage selection code 
-	 * @author Nish
-	 *
-	 */
-	class New implements SelectionListener{
-		
+
+	class Open implements SelectionListener {
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			FileDialog fileDialog = new FileDialog(shlNoteTitan, SWT.OPEN);
+			fileDialog.setText("Open...");
+			filePath = fileDialog.open();
+
+			if(filePath != null){
+				//File file = FileUtils.getFile(filePath);
+				try {
+					FileUtils.loadFileIntoEditor(filePath, styledText);
+					ErrorUtils.showErrorMessageBox(new IOException(), shlNoteTitan);
+				} catch (IOException ioe) {
+					ioe.printStackTrace();
+					ErrorUtils.showErrorMessageBox(ioe, shlNoteTitan);
+				}
+			}
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+		}
+
+	}
+
+	class New implements SelectionListener {
+
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
-		
+
 	}
-	
-	class Open implements SelectionListener{
+
+	class Save implements SelectionListener {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			FileDialog fileDialog = new FileDialog (shlNoteTitan, SWT.OPEN);
-		      fileDialog.setText("Open...");
-		      //fileDialog.setFilterPath(path); 
-		      fileDialog.open();
+
 		}
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
-			
-		}
-		
-	}
-	
-	class Save implements SelectionListener{
 
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			
 		}
 
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-			
-		}
-		
 	}
+
 }
