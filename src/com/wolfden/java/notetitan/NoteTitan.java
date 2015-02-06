@@ -1,6 +1,5 @@
 package com.wolfden.java.notetitan;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ResourceBundle;
 
@@ -34,12 +33,13 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 	private static final ResourceBundle BUNDLE = ResourceBundle
 			.getBundle("com.wolfden.java.notetitan.messages"); //$NON-NLS-1$
 	private static String AppName = BUNDLE.getString("NoteTitan.appName");
+
 	private static final int DEFAULT_WINDOW_WIDTH = 640;
 	private static final int DEFAULT_WINDOW_HEIGHT = 480;
 
 	private String filePath;
 	private StyledText styledText;
-	protected Shell shlNoteTitan;
+	protected static Shell shlNoteTitan;
 
 	/**
 	 * Launch the application.
@@ -49,6 +49,7 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 	public static void main(String[] args) {
 		try {
 			NoteTitan window = new NoteTitan();
+
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -59,7 +60,17 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 	 * Open the window.
 	 */
 	public void open() {
+		Display.setAppName(AppName);
 		Display display = Display.getDefault();
+		
+		Menu systemMenu = Display.getDefault().getSystemMenu();
+		if (systemMenu != null) {
+		    MenuItem preferrences = getSystemItem(systemMenu, SWT.ID_PREFERENCES);
+		    MenuItem about = getSystemItem(systemMenu, SWT.ID_ABOUT);
+		    preferrences.addSelectionListener(new Preferences());
+		    about.addSelectionListener(new About());
+		}
+		
 		createContents();
 		shlNoteTitan.open();
 		shlNoteTitan.layout();
@@ -69,6 +80,13 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 			}
 		}
 	}
+	
+	static MenuItem getSystemItem(Menu menu, int id) {
+	    for (MenuItem item : menu.getItems()) {
+	        if (item.getID() == id) return item;
+	    }
+	    return null;
+	}
 
 	/**
 	 * Create contents of the window.
@@ -76,7 +94,7 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 	protected void createContents() {
 		shlNoteTitan = new Shell();
 		shlNoteTitan.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-		shlNoteTitan.setText(AppName + " - Untitled");
+		shlNoteTitan.setText("Untitled");
 		GridLayout gl_shlNoteTitan = new GridLayout(1, false);
 		gl_shlNoteTitan.horizontalSpacing = 0;
 		gl_shlNoteTitan.verticalSpacing = 2;
@@ -85,55 +103,117 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		gl_shlNoteTitan.marginHeight = 0;
 		shlNoteTitan.setLayout(gl_shlNoteTitan);
 
-		Menu menu = new Menu(shlNoteTitan, SWT.BAR);
-		shlNoteTitan.setMenuBar(menu);
+		Menu menuBar = new Menu(shlNoteTitan, SWT.BAR);
+		shlNoteTitan.setMenuBar(menuBar);
 
-		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
+		MenuItem mntmFile = new MenuItem(menuBar, SWT.CASCADE);
 		mntmFile.setText(BUNDLE.getString("NoteTitan.mntmFile.text")); //$NON-NLS-1$
 
 		Menu menu_1 = new Menu(mntmFile);
 		mntmFile.setMenu(menu_1);
 
+		// Menu Item - New
 		MenuItem mntmNew = new MenuItem(menu_1, SWT.NONE);
 		mntmNew.setText(BUNDLE.getString("NoteTitan.mntmNew.text")); //$NON-NLS-1$
+		mntmNew.setAccelerator(SWT.COMMAND + 'N');
 
+		// Menu Item - Open
 		MenuItem mntmOpen = new MenuItem(menu_1, SWT.NONE);
 		mntmOpen.addSelectionListener(new Open());
+		mntmOpen.setAccelerator(SWT.COMMAND + 'O');
 		mntmOpen.setText(BUNDLE.getString("NoteTitan.mntmOpen.text")); //$NON-NLS-1$
 
+		// Menu Item - Save
 		MenuItem mntmSave = new MenuItem(menu_1, SWT.NONE);
+		mntmSave.setAccelerator(SWT.COMMAND + 'S');
 		mntmSave.setText(BUNDLE.getString("NoteTitan.mntmSave.text")); //$NON-NLS-1$
 
+		// Menu Item - Quit
 		MenuItem mntmQuit = new MenuItem(menu_1, SWT.NONE);
-		mntmQuit.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-
-			}
-		});
+		mntmQuit.addSelectionListener(new Quit());
+		mntmQuit.setAccelerator(SWT.COMMAND + 'Q');
 		mntmQuit.setText(BUNDLE.getString("NoteTitan.mntmQuit.text")); //$NON-NLS-1$
 
-		MenuItem mntmEdit = new MenuItem(menu, SWT.CASCADE);
+		MenuItem mntmEdit = new MenuItem(menuBar, SWT.CASCADE);
 		mntmEdit.setText(BUNDLE.getString("NoteTitan.mntmEdit.text")); //$NON-NLS-1$
 
 		Menu menu_2 = new Menu(mntmEdit);
 		mntmEdit.setMenu(menu_2);
 
+		MenuItem mntmUndo = new MenuItem(menu_2, SWT.NONE);
+		mntmUndo.setAccelerator(SWT.COMMAND + 'Z');
+		mntmUndo.setText(BUNDLE.getString("NoteTitan.mntmUndo.text")); //$NON-NLS-1$
+
+		MenuItem mntmRedo = new MenuItem(menu_2, SWT.NONE);
+		mntmRedo.setAccelerator(SWT.COMMAND + 'Y');
+		mntmRedo.setText(BUNDLE.getString("NoteTitan.mntmRedo.text")); //$NON-NLS-1$
+
+		MenuItem menuItem = new MenuItem(menu_2, SWT.SEPARATOR);
+		menuItem.setText(BUNDLE.getString("NoteTitan.menuItem.text")); //$NON-NLS-1$
+
 		MenuItem mntmCut = new MenuItem(menu_2, SWT.NONE);
+		mntmCut.setAccelerator(SWT.COMMAND + 'X');
+		mntmCut.addSelectionListener(new Cut());
 		mntmCut.setText(BUNDLE.getString("NoteTitan.mntmCut.text")); //$NON-NLS-1$
 
 		MenuItem mntmCopy = new MenuItem(menu_2, SWT.NONE);
+		mntmCopy.setAccelerator(SWT.COMMAND + 'C');
+		mntmCopy.addSelectionListener(new Copy());
 		mntmCopy.setText(BUNDLE.getString("NoteTitan.mntmCopy.text")); //$NON-NLS-1$
 
 		MenuItem mntmPaste = new MenuItem(menu_2, SWT.NONE);
+		mntmPaste.setAccelerator(SWT.COMMAND + 'V');
+		mntmPaste.addSelectionListener(new Paste());
 		mntmPaste.setText(BUNDLE.getString("NoteTitan.mntmPaste.text")); //$NON-NLS-1$
 
-		MenuItem mntmView = new MenuItem(menu, SWT.NONE);
+		MenuItem mntmView = new MenuItem(menuBar, SWT.CASCADE);
 		mntmView.setText(BUNDLE.getString("NoteTitan.mntmView.text")); //$NON-NLS-1$
+
+		Menu menu = new Menu(mntmView);
+		mntmView.setMenu(menu);
+
+		MenuItem mntmWordWrap = new MenuItem(menu, SWT.CHECK);
+		mntmWordWrap.setText(BUNDLE.getString("NoteTitan.mntmWordWrap.text")); //$NON-NLS-1$
+
+		MenuItem mntmSelection = new MenuItem(menuBar, SWT.CASCADE);
+		mntmSelection.setText(BUNDLE.getString("NoteTitan.mntmSelection.text")); //$NON-NLS-1$
+
+		Menu menu_3 = new Menu(mntmSelection);
+		mntmSelection.setMenu(menu_3);
+
+		MenuItem mntmSelectAll = new MenuItem(menu_3, SWT.NONE);
+		mntmSelectAll.setAccelerator(AcceleratorUtils.SWT_SELECT_ALL);
+		mntmSelectAll.addSelectionListener(new SelectAll());
+		mntmSelectAll.setText(BUNDLE.getString("NoteTitan.mntmSelectAll.text")); //$NON-NLS-1$
 
 		styledText = new StyledText(shlNoteTitan, SWT.NONE);
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
 				1, 1));
+
+		Menu contextMenu = new Menu(styledText);
+		styledText.setMenu(contextMenu);
+
+		MenuItem mntmCut_1 = new MenuItem(contextMenu, SWT.NONE);
+		mntmCut_1.setAccelerator(AcceleratorUtils.SWT_CUT);
+		mntmCut_1.setText(BUNDLE.getString("NoteTitan.mntmCut_1.text")); //$NON-NLS-1$
+
+		MenuItem mntmCopy_1 = new MenuItem(contextMenu, SWT.NONE);
+		mntmCopy_1.setAccelerator(AcceleratorUtils.SWT_COPY);
+		mntmCopy_1.setText(BUNDLE.getString("NoteTitan.mntmCopy_1.text")); //$NON-NLS-1$
+
+		MenuItem mntmPaste_1 = new MenuItem(contextMenu, SWT.NONE);
+		mntmPaste_1.setAccelerator(AcceleratorUtils.SWT_PASTE);
+		mntmPaste_1.addSelectionListener(new Paste());
+		mntmPaste_1.setText(BUNDLE.getString("NoteTitan.mntmPaste_1.text")); //$NON-NLS-1$
+
+		MenuItem menuItem_1 = new MenuItem(contextMenu, SWT.SEPARATOR);
+		menuItem_1.setText(BUNDLE.getString("NoteTitan.menuItem_1.text")); //$NON-NLS-1$
+
+		MenuItem mntmSelectAll_1 = new MenuItem(contextMenu, SWT.NONE);
+		mntmSelectAll_1.setAccelerator(AcceleratorUtils.SWT_SELECT_ALL);
+		mntmSelectAll_1.addSelectionListener(new SelectAll());
+		mntmSelectAll_1.setText(BUNDLE
+				.getString("NoteTitan.mntmSelectAll_1.text")); //$NON-NLS-1$
 
 		Label lblNewLabel = new Label(shlNoteTitan, SWT.NONE);
 		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
@@ -204,11 +284,12 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 			fileDialog.setText("Open...");
 			filePath = fileDialog.open();
 
-			if(filePath != null){
-				//File file = FileUtils.getFile(filePath);
+			if (filePath != null) {
+				// File file = FileUtils.getFile(filePath);
 				try {
 					FileUtils.loadFileIntoEditor(filePath, styledText);
-					ErrorUtils.showErrorMessageBox(new IOException(), shlNoteTitan);
+					ErrorUtils.showErrorMessageBox(new IOException(),
+							shlNoteTitan);
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
 					ErrorUtils.showErrorMessageBox(ioe, shlNoteTitan);
@@ -233,7 +314,6 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
-			// TODO Auto-generated method stub
 
 		}
 
@@ -250,7 +330,98 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		public void widgetDefaultSelected(SelectionEvent e) {
 
 		}
-
 	}
 
+	class Quit implements SelectionListener {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+		}
+	}
+
+	class SelectAll implements SelectionListener {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			styledText.selectAll();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+		}
+	}
+
+	class Cut implements SelectionListener {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			styledText.cut();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+		}
+	}
+
+	class Copy implements SelectionListener {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			styledText.copy();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+		}
+	}
+
+	class Paste implements SelectionListener {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			styledText.paste();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+		}
+	}
+	
+	class Preferences implements SelectionListener{
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			
+		}
+	}
+	
+	class About implements SelectionListener{
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			MessageBox about = new MessageBox(shlNoteTitan);
+			about.setMessage("Copyright Nish Tahir 2015. \n Version 1.0");
+			about.open();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+			
+		}
+	}
 }
