@@ -1,10 +1,10 @@
-package com.wolfden.java.notetitan;
+package com.wolfden.java.notetitan.preferences;
 
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
-public class About extends Dialog {
+public class PreferenceDialog extends Dialog {
 
 	protected Object result;
 	protected Shell shell;
@@ -14,9 +14,9 @@ public class About extends Dialog {
 	 * @param parent
 	 * @param style
 	 */
-	public About(Shell parent, int style) {
+	public PreferenceDialog(Shell parent, int style) {
 		super(parent, style);
-		setText("SWT Dialog");
+		setText("Preferences");
 	}
 
 	/**
