@@ -13,4 +13,7 @@ public class AcceleratorUtils {
 	public static final int SWT_NEW = SWT.COMMAND + 'N';
 	public static final int SWT_SAVE = SWT.COMMAND + 'S';
 	public static final int SWT_QUIT = SWT.COMMAND + 'A';
+	
+	public static final int SWT_UNDO = SWT.COMMAND + 'Z';
+	public static final int SWT_REDO = SWT.COMMAND + 'Y';
 }

@@ -25,7 +25,8 @@ import org.eclipse.swt.widgets.Shell;
 
 public class NoteTitan implements ShellListener, VerifyKeyListener,
 		LineStyleListener, LineBackgroundListener, ModifyListener {
-	private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("com.wolfden.java.notetitan.messages"); //$NON-NLS-1$
+	private static final ResourceBundle BUNDLE = ResourceBundle
+			.getBundle("com.wolfden.java.notetitan.messages"); //$NON-NLS-1$
 	private static String AppName = BUNDLE.getString("NoteTitan.appName");
 	private static NoteTitan applicationInstance;
 
@@ -33,10 +34,10 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 	private static final int DEFAULT_WINDOW_HEIGHT = 480;
 
 	protected static Shell shlNoteTitan;
-	private StyledText styledText;
+	private StyledText styledTextInstance;
 
 	public NoteTitan() {
-		
+
 	}
 
 	public static NoteTitan getInstance() {
@@ -45,12 +46,12 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		}
 		return applicationInstance;
 	}
-	
-	protected StyledText getStyledText(){
-		return styledText;
+
+	protected StyledText getStyledText() {
+		return styledTextInstance;
 	}
-	
-	protected Shell getShell(){
+
+	protected Shell getShell() {
 		return shlNoteTitan;
 	}
 
@@ -82,7 +83,7 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 			MenuItem about = getSystemItem(systemMenu, SWT.ID_ABOUT);
 			preferrences
 					.addSelectionListener(new SelectionHelper.Preferences());
-			about.addSelectionListener(new SelectionHelper.About(shlNoteTitan));
+			about.addSelectionListener(new SelectionHelper.About());
 		}
 
 		createContents();
@@ -130,23 +131,23 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		// Menu Item - New
 		MenuItem mntmNew = new MenuItem(menu_1, SWT.NONE);
 		mntmNew.setText(BUNDLE.getString("NoteTitan.mntmNew.text")); //$NON-NLS-1$
-		mntmNew.setAccelerator(SWT.COMMAND + 'N');
+		mntmNew.setAccelerator(AcceleratorUtils.SWT_NEW);
 
 		// Menu Item - Open
 		MenuItem mntmOpen = new MenuItem(menu_1, SWT.NONE);
 		mntmOpen.addSelectionListener(new SelectionHelper.Open());
-		mntmOpen.setAccelerator(SWT.COMMAND + 'O');
+		mntmOpen.setAccelerator(AcceleratorUtils.SWT_OPEN);
 		mntmOpen.setText(BUNDLE.getString("NoteTitan.mntmOpen.text")); //$NON-NLS-1$
 
 		// Menu Item - Save
 		MenuItem mntmSave = new MenuItem(menu_1, SWT.NONE);
-		mntmSave.setAccelerator(SWT.COMMAND + 'S');
+		mntmSave.setAccelerator(AcceleratorUtils.SWT_SAVE);
 		mntmSave.setText(BUNDLE.getString("NoteTitan.mntmSave.text")); //$NON-NLS-1$
 
 		// Menu Item - Quit
 		MenuItem mntmQuit = new MenuItem(menu_1, SWT.NONE);
 		mntmQuit.addSelectionListener(new SelectionHelper.Quit());
-		mntmQuit.setAccelerator(SWT.COMMAND + 'Q');
+		mntmQuit.setAccelerator(AcceleratorUtils.SWT_QUIT);
 		mntmQuit.setText(BUNDLE.getString("NoteTitan.mntmQuit.text")); //$NON-NLS-1$
 
 		MenuItem mntmEdit = new MenuItem(menuBar, SWT.CASCADE);
@@ -156,28 +157,28 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		mntmEdit.setMenu(menu_2);
 
 		MenuItem mntmUndo = new MenuItem(menu_2, SWT.NONE);
-		mntmUndo.setAccelerator(SWT.COMMAND + 'Z');
+		mntmUndo.setAccelerator(AcceleratorUtils.SWT_UNDO);
 		mntmUndo.setText(BUNDLE.getString("NoteTitan.mntmUndo.text")); //$NON-NLS-1$
 
 		MenuItem mntmRedo = new MenuItem(menu_2, SWT.NONE);
-		mntmRedo.setAccelerator(SWT.COMMAND + 'Y');
+		mntmRedo.setAccelerator(AcceleratorUtils.SWT_REDO);
 		mntmRedo.setText(BUNDLE.getString("NoteTitan.mntmRedo.text")); //$NON-NLS-1$
 
 		MenuItem menuItem = new MenuItem(menu_2, SWT.SEPARATOR);
 		menuItem.setText(BUNDLE.getString("NoteTitan.menuItem.text")); //$NON-NLS-1$
 
 		MenuItem mntmCut = new MenuItem(menu_2, SWT.NONE);
-		mntmCut.setAccelerator(SWT.COMMAND + 'X');
+		mntmCut.setAccelerator(AcceleratorUtils.SWT_CUT);
 		mntmCut.addSelectionListener(new SelectionHelper.Cut());
 		mntmCut.setText(BUNDLE.getString("NoteTitan.mntmCut.text")); //$NON-NLS-1$
 
 		MenuItem mntmCopy = new MenuItem(menu_2, SWT.NONE);
-		mntmCopy.setAccelerator(SWT.COMMAND + 'C');
+		mntmCopy.setAccelerator(AcceleratorUtils.SWT_COPY);
 		mntmCopy.addSelectionListener(new SelectionHelper.Copy());
 		mntmCopy.setText(BUNDLE.getString("NoteTitan.mntmCopy.text")); //$NON-NLS-1$
 
 		MenuItem mntmPaste = new MenuItem(menu_2, SWT.NONE);
-		mntmPaste.setAccelerator(SWT.COMMAND + 'V');
+		mntmPaste.setAccelerator(AcceleratorUtils.SWT_PASTE);
 		mntmPaste.addSelectionListener(new SelectionHelper.Paste());
 		mntmPaste.setText(BUNDLE.getString("NoteTitan.mntmPaste.text")); //$NON-NLS-1$
 
@@ -201,15 +202,25 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		mntmSelectAll.addSelectionListener(new SelectionHelper.SelectAll());
 		mntmSelectAll.setText(BUNDLE.getString("NoteTitan.mntmSelectAll.text")); //$NON-NLS-1$
 
-		styledText = new StyledText(shlNoteTitan, SWT.NONE);
+		StyledText styledText = new StyledText(shlNoteTitan, SWT.NONE);
+		styledText.addModifyListener(this);
+		styledTextInstance = styledText;
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false,
+				1, 1));
+		styledText.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true,
+				1, 1));
+		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false,
+				1, 1));
 		styledText.setTopMargin(4);
 		styledText.setRightMargin(4);
 		styledText.setLeftMargin(4);
 		styledText.setBottomMargin(4);
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
 				1, 1));
-
+		
 		Menu contextMenu = new Menu(styledText);
+		styledText.setMenu(contextMenu);
+		
 		styledText.setMenu(contextMenu);
 
 		MenuItem mntmCut_1 = new MenuItem(contextMenu, SWT.NONE);
@@ -234,8 +245,9 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		mntmSelectAll_1.setText(BUNDLE
 				.getString("NoteTitan.mntmSelectAll_1.text")); //$NON-NLS-1$
 
-		Label lblNewLabel = new Label(shlNoteTitan, SWT.NONE);
-		GridData gd_lblNewLabel = new GridData(SWT.LEFT, SWT.CENTER, false,
+
+		Label lblNewLabel = new Label(shlNoteTitan, SWT.BORDER);
+		GridData gd_lblNewLabel = new GridData(SWT.FILL, SWT.CENTER, true,
 				false, 1, 1);
 		gd_lblNewLabel.horizontalIndent = 5;
 		lblNewLabel.setLayoutData(gd_lblNewLabel);
@@ -292,12 +304,13 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 
 	@Override
 	public void modifyText(ModifyEvent e) {
-		
+
 	}
 
 	public void loadFileFromPath(String filePath) {
 		try {
-			FileUtils.loadFileIntoEditor(filePath, styledText);
+			FileUtils.loadFileIntoEditor(filePath,
+					applicationInstance.getStyledText());
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 			ErrorUtils.showErrorMessageBox(ioe, shlNoteTitan);

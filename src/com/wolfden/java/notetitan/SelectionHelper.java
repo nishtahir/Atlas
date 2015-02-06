@@ -143,15 +143,10 @@ public class SelectionHelper {
 	}
 
 	static class About implements SelectionListener {
-		Shell context;
-
-		public About(Shell context) {
-			this.context = context;
-		}
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			MessageBox about = new MessageBox(context);
+			MessageBox about = new MessageBox(NoteTitan.getInstance().getShell());
 			about.setMessage("Copyright Nish Tahir 2015. \n Version 1.0");
 			about.open();
 		}
