@@ -145,6 +145,19 @@ public class SelectionHelper {
 
 		}
 	}
+	
+	static class Undo implements SelectionListener {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			NoteTitan.getInstance().undo();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+		}
+	}
 
 	static class Preferences implements SelectionListener {
 

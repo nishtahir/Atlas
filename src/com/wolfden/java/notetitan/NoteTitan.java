@@ -2,8 +2,11 @@ package com.wolfden.java.notetitan;
 
 import java.io.IOException;
 import java.util.ResourceBundle;
+import java.util.Stack;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ExtendedModifyEvent;
+import org.eclipse.swt.custom.ExtendedModifyListener;
 import org.eclipse.swt.custom.LineBackgroundEvent;
 import org.eclipse.swt.custom.LineBackgroundListener;
 import org.eclipse.swt.custom.LineStyleEvent;
@@ -38,6 +41,10 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 
 	protected static Shell shlNoteTitan;
 	private StyledText styledText;
+	
+	boolean ignoreUndo = false;
+
+	Stack changes = new Stack();
 
 	public NoteTitan() {
 
@@ -174,6 +181,7 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 
 		MenuItem mntmUndo = new MenuItem(menu_2, SWT.NONE);
 		mntmUndo.setAccelerator(SelectionHelper.SWT_UNDO);
+		mntmUndo.addSelectionListener(new SelectionHelper.Undo());
 		mntmUndo.setText(BUNDLE.getString("NoteTitan.mntmUndo.text")); //$NON-NLS-1$
 
 		MenuItem mntmRedo = new MenuItem(menu_2, SWT.NONE);
@@ -226,6 +234,19 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 
 			}
 		});
+		styledText.addExtendedModifyListener(new ExtendedModifyListener() {
+			
+			@Override
+			public void modifyText(ExtendedModifyEvent event) {
+			        if (!ignoreUndo) {
+			          // Push this change onto the changes stack
+			          changes.push(new TextChange(event.start, event.length, event.replacedText));
+			          if (changes.size() > 5000)
+			            changes.remove(0);
+			        }
+			     			
+			}
+		});
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false,
 				1, 1));
 		styledText.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true,
@@ -274,6 +295,30 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		lblNewLabel.setText(BUNDLE.getString("NoteTitan.lblNewLabel.text")); //$NON-NLS-1$
 	}
 
+	  /**
+	   * Undoes the last change
+	   */
+	  public void undo() {
+	    // Make sure undo stack isn't empty
+	    if (!changes.empty()) {
+	      // Get the last change
+	      TextChange change = (TextChange) changes.pop();
+
+	      // Set the flag. Otherwise, the replaceTextRange call will get placed
+	      // on the undo stack
+	      ignoreUndo = true;
+	      // Replace the changed text
+	      styledText.replaceTextRange(change.getStart(), change.getLength(), change.getReplacedText());
+
+	      // Move the caret
+	      styledText.setCaretOffset(change.getStart());
+
+	      // Scroll the screen
+	      styledText.setTopIndex(styledText.getLineAtOffset(change.getStart()));
+	      ignoreUndo = false;
+	    }
+	  }
+	
 	@Override
 	public void verifyKey(VerifyEvent event) {
 		// TODO Auto-generated method stub
