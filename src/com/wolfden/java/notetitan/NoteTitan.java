@@ -309,16 +309,6 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 
 	}
 
-	// public void loadFileFromPath(String filePath) {
-	// try {
-	// FileUtils.loadFileIntoEditor(filePath,
-	// applicationInstance.getStyledText());
-	// } catch (IOException ioe) {
-	// ioe.printStackTrace();
-	// ErrorUtils.showErrorMessageBox(ioe, shlNoteTitan);
-	// }
-	// }
-
 	public void save() {
 		try {
 			FileManager.saveFile(styledText.getText());

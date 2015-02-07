@@ -165,6 +165,7 @@ public class SelectionHelper {
 		public void widgetSelected(SelectionEvent e) {
 			MessageBox about = new MessageBox(NoteTitan.getInstance()
 					.getShell());
+			about.setText("About Note Titan");
 			about.setMessage("Copyright Nish Tahir 2015. \n Version 1.0");
 			about.open();
 		}
