@@ -15,6 +15,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.events.ShellListener;
 import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Display;
@@ -22,6 +23,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 
 public class NoteTitan implements ShellListener, VerifyKeyListener,
@@ -108,6 +110,17 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		shlNoteTitan = new Shell();
 		shlNoteTitan.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 		shlNoteTitan.setText("Untitled");
+		
+
+		Monitor primary = Display.getDefault().getPrimaryMonitor();
+		Rectangle bounds = primary.getBounds();
+		Rectangle rect = shlNoteTitan.getBounds();
+
+		int x = bounds.x + (bounds.width - rect.width) / 2;
+		int y = bounds.y + (bounds.height - rect.height) / 2;
+
+		shlNoteTitan.setLocation(x, y);
+		
 		GridLayout gl_shlNoteTitan = new GridLayout(1, false);
 		gl_shlNoteTitan.horizontalSpacing = 0;
 		gl_shlNoteTitan.verticalSpacing = 2;
@@ -141,7 +154,7 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		mntmSave.setAccelerator(SelectionHelper.SWT_SAVE);
 		mntmSave.addSelectionListener(new SelectionHelper.Save());
 		mntmSave.setText(BUNDLE.getString("NoteTitan.mntmSave.text")); //$NON-NLS-1$
-		
+
 		MenuItem mntmSaveAs = new MenuItem(menu_1, SWT.NONE);
 		mntmSaveAs.setAccelerator(SelectionHelper.SWT_SAVE_AS);
 		mntmSaveAs.addSelectionListener(new SelectionHelper.SaveAs());
@@ -315,6 +328,8 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 		} catch (IOException e) {
 			ErrorUtils.showErrorMessageBox(e, shlNoteTitan);
 		}
+
+		updateWindowTitle();
 	}
 
 	public void copy() {
@@ -352,26 +367,37 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 				e.printStackTrace();
 			}
 		}
+
+		updateWindowTitle();
 	}
 
 	public void saveAs() {
-	    FileDialog dlg = new FileDialog(shlNoteTitan, SWT.SAVE);
-	    String fileName = FileManager.getFileName();
-	    
-	    if (fileName != null) {
-	      dlg.setFileName(fileName);
-	    }
-	    
-	    String temp = dlg.open();
-	    if (temp != null) {
-	      fileName = temp;
-	    }
-	    
-	    try {
+		FileDialog dlg = new FileDialog(shlNoteTitan, SWT.SAVE);
+		String fileName = FileManager.getFileName();
+
+		if (fileName != null) {
+			dlg.setFileName(fileName);
+		}
+
+		String temp = dlg.open();
+		if (temp != null) {
+			fileName = temp;
+		}
+
+		try {
 			FileManager.saveFileAs(fileName, styledText.getText());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		updateWindowTitle();
+	}
+
+	public void updateWindowTitle() {
+		String fileName = FileManager.getFileName();
+		String windowTitle = (fileName != null) ? FileManager.getFileName()
+				: "Untitled";
+		shlNoteTitan.setText(windowTitle);
 	}
 }
