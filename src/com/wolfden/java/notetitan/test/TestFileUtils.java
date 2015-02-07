@@ -8,6 +8,7 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.wolfden.java.notetitan.FileManager;
 import com.wolfden.java.notetitan.FileUtils;
 
 public class TestFileUtils {
@@ -20,6 +21,11 @@ public class TestFileUtils {
 	@Before
 	public void setUp() throws Exception {
 		testFile = new File(testPath);
+	}
+	
+	@Test
+	public void testFileManagerNotNull(){
+		assertNotNull(FileManager.getInstance());
 	}
 
 	@Test

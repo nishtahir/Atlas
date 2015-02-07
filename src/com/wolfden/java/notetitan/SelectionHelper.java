@@ -3,13 +3,11 @@ package com.wolfden.java.notetitan;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
-import org.eclipse.swt.widgets.Shell;
 
 /**
- * Helper class to help manage Selection listener
- * classes in strategy pattern
+ * Helper class to help manage Selection listener implementations and Menu
+ * Accelerators
  * 
  * @author Nish
  *
@@ -17,18 +15,25 @@ import org.eclipse.swt.widgets.Shell;
 
 public class SelectionHelper {
 
+	public static final int SWT_CUT = SWT.COMMAND + 'X';
+	public static final int SWT_COPY = SWT.COMMAND + 'C';
+	public static final int SWT_PASTE = SWT.COMMAND + 'V';
+
+	public static final int SWT_SELECT_ALL = SWT.COMMAND + 'A';
+
+	public static final int SWT_OPEN = SWT.COMMAND + 'O';
+	public static final int SWT_NEW = SWT.COMMAND + 'N';
+	public static final int SWT_SAVE = SWT.COMMAND + 'S';
+	public static final int SWT_SAVE_AS = SWT.COMMAND + SWT.SHIFT + 'S';
+	public static final int SWT_QUIT = SWT.COMMAND + 'Q';
+
+	public static final int SWT_UNDO = SWT.COMMAND + 'Z';
+	public static final int SWT_REDO = SWT.COMMAND + SWT.SHIFT + 'Z';
+
 	static class Open implements SelectionListener {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			Shell shell = NoteTitan.getInstance().getShell();
-			FileDialog fileDialog = new FileDialog(shell, SWT.OPEN);
-			fileDialog.setText("Open...");
-			String filePath = fileDialog.open();
-			if (filePath != null) {
-				// FIXME - Not the best design because of the tight coupling
-				// but it's 3AM... I'm tired :p
-				NoteTitan.getInstance().loadFileFromPath(filePath);
-			}
+			NoteTitan.getInstance().openFile();
 		}
 
 		@Override
@@ -42,8 +47,7 @@ public class SelectionHelper {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			// TODO Implement this
-
+			NoteTitan.getInstance().newFile();
 		}
 
 		@Override
@@ -57,7 +61,20 @@ public class SelectionHelper {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			//TODO - Implement this
+			NoteTitan.getInstance().save();
+		}
+
+		@Override
+		public void widgetDefaultSelected(SelectionEvent e) {
+
+		}
+	}
+
+	static class SaveAs implements SelectionListener {
+
+		@Override
+		public void widgetSelected(SelectionEvent e) {
+			NoteTitan.getInstance().saveAs();
 		}
 
 		@Override
@@ -70,7 +87,7 @@ public class SelectionHelper {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			//TODO - Implement this
+			// TODO - Implement this
 		}
 
 		@Override
@@ -82,7 +99,7 @@ public class SelectionHelper {
 	static class SelectAll implements SelectionListener {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			NoteTitan.getInstance().getStyledText().selectAll();
+			NoteTitan.getInstance().selectAll();
 		}
 
 		@Override
@@ -95,7 +112,7 @@ public class SelectionHelper {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			NoteTitan.getInstance().getStyledText().cut();
+			NoteTitan.getInstance().cut();
 		}
 
 		@Override
@@ -107,7 +124,7 @@ public class SelectionHelper {
 	static class Copy implements SelectionListener {
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			NoteTitan.getInstance().getStyledText().copy();
+			NoteTitan.getInstance().copy();
 		}
 
 		@Override
@@ -120,7 +137,7 @@ public class SelectionHelper {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			NoteTitan.getInstance().getStyledText().paste();
+			NoteTitan.getInstance().paste();
 		}
 
 		@Override
@@ -146,7 +163,8 @@ public class SelectionHelper {
 
 		@Override
 		public void widgetSelected(SelectionEvent e) {
-			MessageBox about = new MessageBox(NoteTitan.getInstance().getShell());
+			MessageBox about = new MessageBox(NoteTitan.getInstance()
+					.getShell());
 			about.setMessage("Copyright Nish Tahir 2015. \n Version 1.0");
 			about.open();
 		}
