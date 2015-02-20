@@ -4,12 +4,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.eclipse.swt"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/Users/Nish/eclipse/plugins/org.eclipse.core.databinding_1.4.2.v20140729-1044.jar" sourcepath="/Users/Nish/eclipse/plugins/org.eclipse.core.databinding_1.4.2.v20140729-1044.jar"/>
-	<classpathentry kind="lib" path="/Users/Nish/eclipse/plugins/org.eclipse.core.databinding.beans_1.2.200.v20140214-0004.jar" sourcepath="/Users/Nish/eclipse/plugins/org.eclipse.core.databinding.beans_1.2.200.v20140214-0004.jar"/>
-	<classpathentry kind="lib" path="/Users/Nish/eclipse/plugins/org.eclipse.core.databinding.observable_1.4.1.v20140210-1835.jar" sourcepath="/Users/Nish/eclipse/plugins/org.eclipse.core.databinding.observable_1.4.1.v20140210-1835.jar"/>
-	<classpathentry kind="lib" path="/Users/Nish/eclipse/plugins/org.eclipse.core.databinding.property_1.4.200.v20140214-0004.jar" sourcepath="/Users/Nish/eclipse/plugins/org.eclipse.core.databinding.property_1.4.200.v20140214-0004.jar"/>
-	<classpathentry kind="lib" path="/Users/Nish/eclipse/plugins/org.eclipse.jface.databinding_1.6.200.v20140528-1422.jar" sourcepath="/Users/Nish/eclipse/plugins/org.eclipse.jface.databinding_1.6.200.v20140528-1422.jar"/>
-	<classpathentry kind="lib" path="/Users/Nish/eclipse/plugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar" sourcepath="/Users/Nish/eclipse/plugins/org.eclipse.equinox.common_3.6.200.v20130402-1505.jar"/>
-	<classpathentry kind="lib" path="/Users/Nish/eclipse/plugins/com.ibm.icu_52.1.0.v201404241930.jar" sourcepath="/Users/Nish/eclipse/plugins/com.ibm.icu_52.1.0.v201404241930.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
