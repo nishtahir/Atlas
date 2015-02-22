@@ -1,58 +1,35 @@
 package com.wolfden.java.notetitan;
 
 import java.io.IOException;
-import java.util.ResourceBundle;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.LineBackgroundEvent;
-import org.eclipse.swt.custom.LineBackgroundListener;
+import org.eclipse.swt.custom.CaretEvent;
+import org.eclipse.swt.custom.CaretListener;
+import org.eclipse.swt.custom.ExtendedModifyEvent;
+import org.eclipse.swt.custom.ExtendedModifyListener;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.StyledText;
-import org.eclipse.swt.custom.VerifyKeyListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.ShellListener;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Monitor;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.wb.swt.SWTResourceManager;
 
-public class NoteTitan implements ShellListener, VerifyKeyListener,
-		LineStyleListener, LineBackgroundListener {
-	private static final ResourceBundle BUNDLE = ResourceBundle
-			.getBundle("com.wolfden.java.notetitan.messages"); //$NON-NLS-1$
-	private static String AppName = BUNDLE.getString("NoteTitan.appName");
-	private static NoteTitan applicationInstance;
+public class NoteTitan {
 
-	private static final int DEFAULT_WINDOW_WIDTH = 640;
-	private static final int DEFAULT_WINDOW_HEIGHT = 480;
-
-	protected static Shell shlNoteTitan;
+	protected Shell shlNoteTitan;
 	private StyledText styledText;
-
-	public NoteTitan() {
-
-	}
-
-	public static NoteTitan getInstance() {
-		if (applicationInstance == null) {
-			applicationInstance = new NoteTitan();
-		}
-		return applicationInstance;
-	}
-
-	protected Shell getShell() {
-		return shlNoteTitan;
-	}
+	int numDigits = 3;
+	int curActiveLine = 0;
 
 	/**
 	 * Launch the application.
@@ -61,7 +38,7 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 	 */
 	public static void main(String[] args) {
 		try {
-			NoteTitan window = getInstance();
+			NoteTitan window = new NoteTitan();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,7 +49,7 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 	 * Open the window.
 	 */
 	public void open() {
-		Display.setAppName(AppName);
+		Display.setAppName("Note Titan");
 		Display display = Display.getDefault();
 
 		Menu systemMenu = Display.getDefault().getSystemMenu();
@@ -81,279 +58,302 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 					SWT.ID_PREFERENCES);
 			MenuItem about = getSystemItem(systemMenu, SWT.ID_ABOUT);
 			preferrences
-					.addSelectionListener(new SelectionHelper.Preferences());
-			about.addSelectionListener(new SelectionHelper.About());
-		}
+					.addSelectionListener(new SelectionAdapter() {
+						@Override
+						public void widgetSelected(SelectionEvent e) {
+							showAboutDialog();
+						}
+					});
+			about.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					showAboutDialog();
+				}
+			});
 
-		createContents();
-		shlNoteTitan.open();
-		shlNoteTitan.layout();
-		while (!shlNoteTitan.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
+			createContents();
+			shlNoteTitan.open();
+			shlNoteTitan.layout();
+			while (!shlNoteTitan.isDisposed()) {
+				if (!display.readAndDispatch()) {
+					display.sleep();
+				}
 			}
 		}
 	}
+	
+	
 
-	static MenuItem getSystemItem(Menu menu, int id) {
-		for (MenuItem item : menu.getItems()) {
-			if (item.getID() == id)
-				return item;
-		}
-		return null;
+	protected void showAboutDialog() {
+		MessageBox about = new MessageBox(shlNoteTitan);
+		about.setText("About Note Titan");
+		about.setMessage("Copyright Nish Tahir 2015. \n Version 0.1 alpha");
+		about.open();
 	}
 
 	/**
 	 * Create contents of the window.
+	 * @wbp.parser.entryPoint
 	 */
 	protected void createContents() {
 		shlNoteTitan = new Shell();
-		shlNoteTitan.setSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
-		shlNoteTitan.setText("Untitled");
-		
-
-		Monitor primary = Display.getDefault().getPrimaryMonitor();
-		Rectangle bounds = primary.getBounds();
-		Rectangle rect = shlNoteTitan.getBounds();
-
-		int x = bounds.x + (bounds.width - rect.width) / 2;
-		int y = bounds.y + (bounds.height - rect.height) / 2;
-
-		shlNoteTitan.setLocation(x, y);
-		
+		shlNoteTitan.setSize(640, 480);
+		shlNoteTitan.setText("Note Titan");
 		GridLayout gl_shlNoteTitan = new GridLayout(1, false);
 		gl_shlNoteTitan.horizontalSpacing = 0;
-		gl_shlNoteTitan.verticalSpacing = 2;
-		gl_shlNoteTitan.marginBottom = 2;
+		gl_shlNoteTitan.verticalSpacing = 0;
 		gl_shlNoteTitan.marginWidth = 0;
 		gl_shlNoteTitan.marginHeight = 0;
 		shlNoteTitan.setLayout(gl_shlNoteTitan);
 
-		Menu menuBar = new Menu(shlNoteTitan, SWT.BAR);
-		shlNoteTitan.setMenuBar(menuBar);
+		Menu menu = new Menu(shlNoteTitan, SWT.BAR);
+		shlNoteTitan.setMenuBar(menu);
 
-		MenuItem mntmFile = new MenuItem(menuBar, SWT.CASCADE);
-		mntmFile.setText(BUNDLE.getString("NoteTitan.mntmFile.text")); //$NON-NLS-1$
+		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
+		mntmFile.setText("File");
 
-		Menu menu_1 = new Menu(mntmFile);
-		mntmFile.setMenu(menu_1);
+		Menu menu_2 = new Menu(mntmFile);
+		mntmFile.setMenu(menu_2);
 
-		// Menu Item - New
-		MenuItem mntmNew = new MenuItem(menu_1, SWT.NONE);
-		mntmNew.setText(BUNDLE.getString("NoteTitan.mntmNew.text")); //$NON-NLS-1$
+		MenuItem mntmNew = new MenuItem(menu_2, SWT.NONE);
+		mntmNew.setText("New");
 		mntmNew.setAccelerator(SelectionHelper.SWT_NEW);
 
-		// Menu Item - Open
-		MenuItem mntmOpen = new MenuItem(menu_1, SWT.NONE);
-		mntmOpen.addSelectionListener(new SelectionHelper.Open());
-		mntmOpen.setAccelerator(SelectionHelper.SWT_OPEN);
-		mntmOpen.setText(BUNDLE.getString("NoteTitan.mntmOpen.text")); //$NON-NLS-1$
-
-		// Menu Item - Save
-		MenuItem mntmSave = new MenuItem(menu_1, SWT.NONE);
-		mntmSave.setAccelerator(SelectionHelper.SWT_SAVE);
-		mntmSave.addSelectionListener(new SelectionHelper.Save());
-		mntmSave.setText(BUNDLE.getString("NoteTitan.mntmSave.text")); //$NON-NLS-1$
-
-		MenuItem mntmSaveAs = new MenuItem(menu_1, SWT.NONE);
-		mntmSaveAs.setAccelerator(SelectionHelper.SWT_SAVE_AS);
-		mntmSaveAs.addSelectionListener(new SelectionHelper.SaveAs());
-		mntmSaveAs.setText(BUNDLE.getString("NoteTitan.mntmSaveAs.text")); //$NON-NLS-1$
-
-		// Menu Item - Quit
-		MenuItem mntmQuit = new MenuItem(menu_1, SWT.NONE);
-		mntmQuit.addSelectionListener(new SelectionHelper.Quit());
-		mntmQuit.setAccelerator(SelectionHelper.SWT_QUIT);
-		mntmQuit.setText(BUNDLE.getString("NoteTitan.mntmQuit.text")); //$NON-NLS-1$
-
-		MenuItem mntmEdit = new MenuItem(menuBar, SWT.CASCADE);
-		mntmEdit.setText(BUNDLE.getString("NoteTitan.mntmEdit.text")); //$NON-NLS-1$
-
-		Menu menu_2 = new Menu(mntmEdit);
-		mntmEdit.setMenu(menu_2);
-
-		MenuItem mntmUndo = new MenuItem(menu_2, SWT.NONE);
-		mntmUndo.setAccelerator(SelectionHelper.SWT_UNDO);
-		mntmUndo.setText(BUNDLE.getString("NoteTitan.mntmUndo.text")); //$NON-NLS-1$
-
-		MenuItem mntmRedo = new MenuItem(menu_2, SWT.NONE);
-		mntmRedo.setAccelerator(SelectionHelper.SWT_REDO);
-		mntmRedo.setText(BUNDLE.getString("NoteTitan.mntmRedo.text")); //$NON-NLS-1$
-
-		MenuItem menuItem = new MenuItem(menu_2, SWT.SEPARATOR);
-		menuItem.setText(BUNDLE.getString("NoteTitan.menuItem.text")); //$NON-NLS-1$
-
-		MenuItem mntmCut = new MenuItem(menu_2, SWT.NONE);
-		mntmCut.setAccelerator(SelectionHelper.SWT_CUT);
-		mntmCut.addSelectionListener(new SelectionHelper.Cut());
-		mntmCut.setText(BUNDLE.getString("NoteTitan.mntmCut.text")); //$NON-NLS-1$
-
-		MenuItem mntmCopy = new MenuItem(menu_2, SWT.NONE);
-		mntmCopy.setAccelerator(SelectionHelper.SWT_COPY);
-		mntmCopy.addSelectionListener(new SelectionHelper.Copy());
-		mntmCopy.setText(BUNDLE.getString("NoteTitan.mntmCopy.text")); //$NON-NLS-1$
-
-		MenuItem mntmPaste = new MenuItem(menu_2, SWT.NONE);
-		mntmPaste.setAccelerator(SelectionHelper.SWT_PASTE);
-		mntmPaste.addSelectionListener(new SelectionHelper.Paste());
-		mntmPaste.setText(BUNDLE.getString("NoteTitan.mntmPaste.text")); //$NON-NLS-1$
-
-		MenuItem mntmView = new MenuItem(menuBar, SWT.CASCADE);
-		mntmView.setText(BUNDLE.getString("NoteTitan.mntmView.text")); //$NON-NLS-1$
-
-		Menu menu = new Menu(mntmView);
-		mntmView.setMenu(menu);
-
-		MenuItem mntmWordWrap = new MenuItem(menu, SWT.CHECK);
-		mntmWordWrap.setText(BUNDLE.getString("NoteTitan.mntmWordWrap.text")); //$NON-NLS-1$
-
-		MenuItem mntmSelection = new MenuItem(menuBar, SWT.CASCADE);
-		mntmSelection.setText(BUNDLE.getString("NoteTitan.mntmSelection.text")); //$NON-NLS-1$
-
-		Menu menu_3 = new Menu(mntmSelection);
-		mntmSelection.setMenu(menu_3);
-
-		MenuItem mntmSelectAll = new MenuItem(menu_3, SWT.NONE);
-		mntmSelectAll.setAccelerator(SelectionHelper.SWT_SELECT_ALL);
-		mntmSelectAll.addSelectionListener(new SelectionHelper.SelectAll());
-		mntmSelectAll.setText(BUNDLE.getString("NoteTitan.mntmSelectAll.text")); //$NON-NLS-1$
-
-		styledText = new StyledText(shlNoteTitan, SWT.NONE);
-		styledText.addModifyListener(new ModifyListener() {
-
+		MenuItem mntmOpen = new MenuItem(menu_2, SWT.NONE);
+		mntmOpen.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void modifyText(ModifyEvent e) {
+			public void widgetSelected(SelectionEvent e) {
+				openFile();
+			}
+		});
+		mntmOpen.setText("Open");
+		mntmOpen.setAccelerator(SelectionHelper.SWT_OPEN);
+
+		MenuItem mntmSave = new MenuItem(menu_2, SWT.NONE);
+		mntmSave.setText("Save");
+		mntmSave.setAccelerator(SelectionHelper.SWT_SAVE);
+		;
+
+		MenuItem mntmSaveAs = new MenuItem(menu_2, SWT.NONE);
+		mntmSaveAs.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				saveAs();
+			}
+		});
+		mntmSaveAs.setText("Save As...");
+		mntmSaveAs.setAccelerator(SelectionHelper.SWT_SAVE_AS);
+		;
+
+		MenuItem mntmEdit = new MenuItem(menu, SWT.CASCADE);
+		mntmEdit.setText("Edit");
+
+		Menu menu_3 = new Menu(mntmEdit);
+		mntmEdit.setMenu(menu_3);
+
+		MenuItem mntmUndo = new MenuItem(menu_3, SWT.NONE);
+		mntmUndo.setText("Undo");
+		mntmUndo.setAccelerator(SelectionHelper.SWT_UNDO);
+		;
+
+		MenuItem mntmRedo = new MenuItem(menu_3, SWT.NONE);
+		mntmRedo.setText("Redo");
+		mntmRedo.setAccelerator(SelectionHelper.SWT_REDO);
+		;
+
+		new MenuItem(menu_3, SWT.SEPARATOR);
+
+		MenuItem mntmCut = new MenuItem(menu_3, SWT.NONE);
+		mntmCut.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				cut();
+			}
+		});
+		mntmCut.setText("Cut");
+		mntmCut.setAccelerator(SelectionHelper.SWT_CUT);
+
+		MenuItem mntmCopy = new MenuItem(menu_3, SWT.NONE);
+		mntmCopy.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				copy();
+			}
+		});
+		mntmCopy.setText("Copy");
+		mntmCopy.setAccelerator(SelectionHelper.SWT_COPY);
+
+		MenuItem mntmPaste = new MenuItem(menu_3, SWT.NONE);
+		mntmPaste.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				paste();
+			}
+		});
+		mntmPaste.setText("Paste");
+		mntmPaste.setAccelerator(SelectionHelper.SWT_PASTE);
+		;
+
+		MenuItem mntmView = new MenuItem(menu, SWT.NONE);
+		mntmView.setText("View");
+
+		MenuItem mntmSelection = new MenuItem(menu, SWT.CASCADE);
+		mntmSelection.setText("Selection");
+
+		Menu menu_4 = new Menu(mntmSelection);
+		mntmSelection.setMenu(menu_4);
+
+		MenuItem mntmSelectAll_1 = new MenuItem(menu_4, SWT.NONE);
+		mntmSelectAll_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				selectAll();
+			}
+		});
+		mntmSelectAll_1.setText("Select All");
+		mntmSelectAll_1.setAccelerator(SelectionHelper.SWT_SELECT_ALL);
+		;
+
+		styledText = new StyledText(shlNoteTitan, SWT.V_SCROLL | SWT.H_SCROLL);
+		styledText.setAlwaysShowScrollBars(false);
+		styledText.setForeground(SWTResourceManager.getColor(255, 255, 255));
+		styledText.setBackground(SWTResourceManager.getColor(39, 40, 34));
+		styledText.addCaretListener(new CaretListener() {
+			public void caretMoved(CaretEvent event) {
+				//TODO - Implement Line numbering later
+//				int activeLine = styledText.getLineAtOffset(event.caretOffset);
+//				if (curActiveLine != activeLine) {
+//					int digits = 3;
+//					if (styledText.getLineCount() > 999)
+//						digits = (int) (Math.floor(Math.log10(styledText
+//								.getLineCount())) + 1);
+//					int width = digits * 12;
+//					styledText.redraw(0, styledText.getLinePixel(activeLine),
+//							width, styledText.getLineHeight(), true);
+//					styledText.redraw(0,
+//							styledText.getLinePixel(curActiveLine), width,
+//							styledText.getLineHeight(), true);
+//					curActiveLine = activeLine;
+//				}
+			}
+		});
+		styledText.addExtendedModifyListener(new ExtendedModifyListener() {
+			public void modifyText(ExtendedModifyEvent event) {
+				//TODO - Implement Line numbering later
+//				int digits = 3;
+//				int lineCount = styledText.getLineCount();
+//				if (lineCount > 999)
+//					digits = (int) (Math.floor(Math.log10(styledText
+//							.getLineCount())) + 1);
+//				if (numDigits != digits) {
+//					numDigits = digits;
+//					styledText.redraw();
+//					return;
+//				}
+//				int startLine = styledText.getLineAtOffset(event.start);
+//				int endLine = styledText.getLineAtOffset(event.start
+//						+ event.length);
+//				if (startLine != endLine
+//						|| event.replacedText.contains(System.lineSeparator())) {
+//					styledText.redraw(0, styledText.getLinePixel(startLine),
+//							digits * 12, styledText.getLineHeight()
+//									* (lineCount - startLine), true);
+//				}
 
 			}
 		});
-		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false,
-				1, 1));
-		styledText.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true,
-				1, 1));
-		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false,
-				1, 1));
-		styledText.setTopMargin(4);
-		styledText.setRightMargin(4);
-		styledText.setLeftMargin(4);
-		styledText.setBottomMargin(4);
+		styledText.addLineStyleListener(new LineStyleListener() {
+			public void lineGetStyle(LineStyleEvent event) {
+				//TODO - Implement Line numbering later
+//				int activeLine = styledText.getLineAtOffset(styledText
+//						.getCaretOffset());
+//				int currentLine = styledText.getLineAtOffset(event.lineOffset);
+//				event.bulletIndex = currentLine;
+//				int width = 36;
+//
+//				if (styledText.getLineCount() > 999)
+//					width = (int) ((Math.floor(Math.log10(styledText
+//							.getLineCount())) + 1) * 12);
+//				// Set the style, 12 pixles wide for each digit
+//				StyleRange style = new StyleRange();
+//				style.metrics = new GlyphMetrics(0, 0, width);
+//				if (activeLine == currentLine) {
+//					// style.background = Theme.highlightedLineColor;
+//				}
+//				event.bullet = new Bullet(ST.BULLET_NUMBER, style);
+			}
+		});
+		styledText.setBottomMargin(8);
+		styledText.setTopMargin(8);
+		styledText.setRightMargin(8);
+		styledText.setLeftMargin(8);
 		styledText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true,
 				1, 1));
 
-		Menu contextMenu = new Menu(styledText);
-		styledText.setMenu(contextMenu);
+		Menu menu_1 = new Menu(styledText);
+		styledText.setMenu(menu_1);
 
-		styledText.setMenu(contextMenu);
+		MenuItem mntmCut_1 = new MenuItem(menu_1, SWT.NONE);
+		mntmCut_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				cut();
+			}
+		});
+		mntmCut_1.setText("Cut");
 
-		MenuItem mntmCut_1 = new MenuItem(contextMenu, SWT.NONE);
-		mntmCut_1.setAccelerator(SelectionHelper.SWT_CUT);
-		mntmCut_1.setText(BUNDLE.getString("NoteTitan.mntmCut_1.text")); //$NON-NLS-1$
+		MenuItem mntmCopy_1 = new MenuItem(menu_1, SWT.NONE);
+		mntmCopy_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				copy();
+			}
+		});
+		mntmCopy_1.setText("Copy");
 
-		MenuItem mntmCopy_1 = new MenuItem(contextMenu, SWT.NONE);
-		mntmCopy_1.setAccelerator(SelectionHelper.SWT_COPY);
-		mntmCopy_1.setText(BUNDLE.getString("NoteTitan.mntmCopy_1.text")); //$NON-NLS-1$
+		MenuItem mntmPaste_1 = new MenuItem(menu_1, SWT.NONE);
+		mntmPaste_1.setText("Paste");
+		mntmPaste_1.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				paste();
+			}
+		});
 
-		MenuItem mntmPaste_1 = new MenuItem(contextMenu, SWT.NONE);
-		mntmPaste_1.setAccelerator(SelectionHelper.SWT_PASTE);
-		mntmPaste_1.addSelectionListener(new SelectionHelper.Paste());
-		mntmPaste_1.setText(BUNDLE.getString("NoteTitan.mntmPaste_1.text")); //$NON-NLS-1$
+		new MenuItem(menu_1, SWT.SEPARATOR);
 
-		MenuItem menuItem_1 = new MenuItem(contextMenu, SWT.SEPARATOR);
-		menuItem_1.setText(BUNDLE.getString("NoteTitan.menuItem_1.text")); //$NON-NLS-1$
+		MenuItem mntmSelectAll = new MenuItem(menu_1, SWT.NONE);
+		mntmSelectAll.setText("Select All");
+		mntmSelectAll.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				selectAll();
+			}
+		});
 
-		MenuItem mntmSelectAll_1 = new MenuItem(contextMenu, SWT.NONE);
-		mntmSelectAll_1.setAccelerator(SelectionHelper.SWT_SELECT_ALL);
-		mntmSelectAll_1.addSelectionListener(new SelectionHelper.SelectAll());
-		mntmSelectAll_1.setText(BUNDLE
-				.getString("NoteTitan.mntmSelectAll_1.text")); //$NON-NLS-1$
+		Composite composite = new Composite(shlNoteTitan, SWT.NONE);
+		composite.setBackground(SWTResourceManager.getColor(105, 105, 105));
+		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
+				false, 1, 1));
+		GridLayout gl_composite = new GridLayout(2, false);
+		gl_composite.marginLeft = 4;
+		gl_composite.marginBottom = 2;
+		gl_composite.marginHeight = 2;
+		composite.setLayout(gl_composite);
 
-		Label lblNewLabel = new Label(shlNoteTitan, SWT.BORDER);
-		GridData gd_lblNewLabel = new GridData(SWT.FILL, SWT.CENTER, true,
-				false, 1, 1);
-		gd_lblNewLabel.horizontalIndent = 5;
-		lblNewLabel.setLayoutData(gd_lblNewLabel);
-		lblNewLabel.setText(BUNDLE.getString("NoteTitan.lblNewLabel.text")); //$NON-NLS-1$
-	}
+		Label lblNewLabel = new Label(composite, SWT.SHADOW_IN);
+		lblNewLabel.setForeground(SWTResourceManager.getColor(245, 245, 245));
+		lblNewLabel.setText("Lines: 0");
 
-	@Override
-	public void verifyKey(VerifyEvent event) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void shellActivated(ShellEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void shellClosed(ShellEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void shellDeactivated(ShellEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void shellDeiconified(ShellEvent e) {
-		// TODO Auto-generated method stub
+		Label lblNewLabel_1 = new Label(composite, SWT.NONE);
+		lblNewLabel_1.setForeground(SWTResourceManager.getColor(245, 245, 245));
+		lblNewLabel_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
+				false, 1, 1));
+		lblNewLabel_1.setText("Characters: 0");
 
 	}
 
-	@Override
-	public void shellIconified(ShellEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void lineGetBackground(LineBackgroundEvent event) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void lineGetStyle(LineStyleEvent event) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void save() {
-		try {
-			FileManager.saveFile(styledText.getText());
-		} catch (IOException e) {
-			ErrorUtils.showErrorMessageBox(e, shlNoteTitan);
-		}
-
-		updateWindowTitle();
-	}
-
-	public void copy() {
-		styledText.copy();
-	}
-
-	public void cut() {
-		styledText.cut();
-	}
-
-	public void paste() {
-		styledText.paste();
-	}
-
-	public void selectAll() {
-		styledText.selectAll();
-	}
-
-	public void newFile() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void openFile() {
+	protected void openFile() {
 		FileDialog fileDialog = new FileDialog(shlNoteTitan, SWT.OPEN);
 		fileDialog.setText("Open...");
 		String filePath = fileDialog.open();
@@ -367,8 +367,6 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 				e.printStackTrace();
 			}
 		}
-
-		updateWindowTitle();
 	}
 
 	public void saveAs() {
@@ -391,13 +389,31 @@ public class NoteTitan implements ShellListener, VerifyKeyListener,
 			e.printStackTrace();
 		}
 
-		updateWindowTitle();
+		// updateWindowTitle();
 	}
 
-	public void updateWindowTitle() {
-		String fileName = FileManager.getFileName();
-		String windowTitle = (fileName != null) ? FileManager.getFileName()
-				: "Untitled";
-		shlNoteTitan.setText(windowTitle);
+	public void copy() {
+		styledText.copy();
 	}
+
+	public void cut() {
+		styledText.cut();
+	}
+
+	public void paste() {
+		styledText.paste();
+	}
+
+	public void selectAll() {
+		styledText.selectAll();
+	}
+
+	static MenuItem getSystemItem(Menu menu, int id) {
+		for (MenuItem item : menu.getItems()) {
+			if (item.getID() == id)
+				return item;
+		}
+		return null;
+	}
+
 }
