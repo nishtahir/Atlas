@@ -30,6 +30,8 @@ public class NoteTitan {
 	private StyledText styledText;
 	int numDigits = 3;
 	int curActiveLine = 0;
+	private Label lblLineCount;
+	private Composite composite;
 
 	/**
 	 * Launch the application.
@@ -216,7 +218,7 @@ public class NoteTitan {
 
 		styledText = new StyledText(shlNoteTitan, SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.setAlwaysShowScrollBars(false);
-		styledText.setForeground(SWTResourceManager.getColor(255, 255, 255));
+		styledText.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		styledText.setBackground(SWTResourceManager.getColor(39, 40, 34));
 		styledText.addCaretListener(new CaretListener() {
 			public void caretMoved(CaretEvent event) {
@@ -239,6 +241,8 @@ public class NoteTitan {
 		});
 		styledText.addExtendedModifyListener(new ExtendedModifyListener() {
 			public void modifyText(ExtendedModifyEvent event) {
+				lblLineCount.setText("Lines: " + styledText.getLineCount() + ", Characters: " + styledText.getCharCount());
+				composite.layout();
 				//TODO - Implement Line numbering later
 //				int digits = 3;
 //				int lineCount = styledText.getLineCount();
@@ -264,6 +268,7 @@ public class NoteTitan {
 		});
 		styledText.addLineStyleListener(new LineStyleListener() {
 			public void lineGetStyle(LineStyleEvent event) {
+				
 				//TODO - Implement Line numbering later
 //				int activeLine = styledText.getLineAtOffset(styledText
 //						.getCaretOffset());
@@ -331,25 +336,20 @@ public class NoteTitan {
 			}
 		});
 
-		Composite composite = new Composite(shlNoteTitan, SWT.NONE);
+		composite = new Composite(shlNoteTitan, SWT.NONE);
 		composite.setBackground(SWTResourceManager.getColor(105, 105, 105));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false, 1, 1));
-		GridLayout gl_composite = new GridLayout(2, false);
+		GridLayout gl_composite = new GridLayout(1, false);
 		gl_composite.marginLeft = 4;
 		gl_composite.marginBottom = 2;
 		gl_composite.marginHeight = 2;
 		composite.setLayout(gl_composite);
 
-		Label lblNewLabel = new Label(composite, SWT.SHADOW_IN);
-		lblNewLabel.setForeground(SWTResourceManager.getColor(245, 245, 245));
-		lblNewLabel.setText("Lines: 0");
-
-		Label lblNewLabel_1 = new Label(composite, SWT.NONE);
-		lblNewLabel_1.setForeground(SWTResourceManager.getColor(245, 245, 245));
-		lblNewLabel_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
-				false, 1, 1));
-		lblNewLabel_1.setText("Characters: 0");
+		lblLineCount = new Label(composite, SWT.SHADOW_IN);
+		lblLineCount.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		lblLineCount.setForeground(SWTResourceManager.getColor(245, 245, 245));
+		lblLineCount.setText("Lines: 0, Characters: 0");
 
 	}
 
