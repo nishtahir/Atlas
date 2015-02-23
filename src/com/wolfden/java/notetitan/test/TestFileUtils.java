@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.wolfden.java.notetitan.FileManager;
-import com.wolfden.java.notetitan.FileUtils;
+import com.wolfden.java.notetitan.util.FileUtils;
 
 public class TestFileUtils {
 	private File testFile;

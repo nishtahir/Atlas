@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan;
+package com.wolfden.java.notetitan.util;
 
 import java.io.BufferedInputStream;
 import java.io.File;

@@ -1,7 +1,11 @@
 package com.wolfden.java.notetitan;
 
 import java.io.IOException;
+import java.util.List;
 
+import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.Token;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
@@ -24,6 +28,9 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.wolfden.java.notetitan.syntax.java.JavaLexer;
+import com.wolfden.java.notetitan.syntax.java.JavaTokenReader;
+
 public class NoteTitan {
 
 	protected Shell shlNoteTitan;
@@ -32,6 +39,8 @@ public class NoteTitan {
 	int curActiveLine = 0;
 	private Label lblLineCount;
 	private Composite composite;
+	private int numBlockComments = -1;
+	private JavaTokenReader listener;
 
 	/**
 	 * Launch the application.
@@ -269,6 +278,8 @@ public class NoteTitan {
 		styledText.addLineStyleListener(new LineStyleListener() {
 			public void lineGetStyle(LineStyleEvent event) {
 				
+				parseSyntax(event);
+				
 				//TODO - Implement Line numbering later
 //				int activeLine = styledText.getLineAtOffset(styledText
 //						.getCaretOffset());
@@ -351,6 +362,25 @@ public class NoteTitan {
 		lblLineCount.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		lblLineCount.setText("Lines: 0, Characters: 0");
 
+	}
+
+	protected void parseSyntax(LineStyleEvent event) {
+		 listener = new JavaTokenReader();
+		ANTLRInputStream input = new ANTLRInputStream(styledText.getText());
+		JavaLexer lexer = new JavaLexer(input);
+		lexer.removeErrorListeners();
+		
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		
+		event.styles = listener.getStyles(tokens, event.styles);
+		
+		List<Token> blockComments = tokens.getTokens(0, tokens.size() - 1,
+		JavaLexer.COMMENT);
+		if ((blockComments != null && blockComments.size() != numBlockComments)
+		|| (blockComments == null && numBlockComments  != 0)) {
+		numBlockComments = blockComments == null ? 0 : blockComments.size();
+		styledText.redraw();
+		}
 	}
 
 	protected void openFile() {
