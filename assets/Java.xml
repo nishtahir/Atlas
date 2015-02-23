@@ -1,0 +1,11 @@
+<theme name="Melody" language="Java">
+	<style name="StringLiteral" color="FBE3BF"/>
+	<style name="IntegerLiteral" color="FDB082"/>
+	<style name="FloatingPointLiteral" color="FDB082"/>
+	<style name="BooleanLiteral" color="1F8181"/>
+	<style name="CharacterLiteral" color="F8BB39"/>
+	<style name="IfElse" color="F2BC79"/>
+	
+	<!-- public private protected -->
+	<style name="ACCESS_MODIFIERS" color="1F8181"/>
+</theme>

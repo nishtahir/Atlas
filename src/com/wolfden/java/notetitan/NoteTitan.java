@@ -68,13 +68,12 @@ public class NoteTitan {
 			MenuItem preferrences = getSystemItem(systemMenu,
 					SWT.ID_PREFERENCES);
 			MenuItem about = getSystemItem(systemMenu, SWT.ID_ABOUT);
-			preferrences
-					.addSelectionListener(new SelectionAdapter() {
-						@Override
-						public void widgetSelected(SelectionEvent e) {
-							showAboutDialog();
-						}
-					});
+			preferrences.addSelectionListener(new SelectionAdapter() {
+				@Override
+				public void widgetSelected(SelectionEvent e) {
+					showAboutDialog();
+				}
+			});
 			about.addSelectionListener(new SelectionAdapter() {
 				@Override
 				public void widgetSelected(SelectionEvent e) {
@@ -92,8 +91,6 @@ public class NoteTitan {
 			}
 		}
 	}
-	
-	
 
 	protected void showAboutDialog() {
 		MessageBox about = new MessageBox(shlNoteTitan);
@@ -104,6 +101,7 @@ public class NoteTitan {
 
 	/**
 	 * Create contents of the window.
+	 * 
 	 * @wbp.parser.entryPoint
 	 */
 	protected void createContents() {
@@ -226,77 +224,82 @@ public class NoteTitan {
 		;
 
 		styledText = new StyledText(shlNoteTitan, SWT.V_SCROLL | SWT.H_SCROLL);
+		styledText
+				.setFont(SWTResourceManager.getFont("Monaco", 12, SWT.NORMAL));
 		styledText.setAlwaysShowScrollBars(false);
 		styledText.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		styledText.setBackground(SWTResourceManager.getColor(39, 40, 34));
 		styledText.addCaretListener(new CaretListener() {
 			public void caretMoved(CaretEvent event) {
-				//TODO - Implement Line numbering later
-//				int activeLine = styledText.getLineAtOffset(event.caretOffset);
-//				if (curActiveLine != activeLine) {
-//					int digits = 3;
-//					if (styledText.getLineCount() > 999)
-//						digits = (int) (Math.floor(Math.log10(styledText
-//								.getLineCount())) + 1);
-//					int width = digits * 12;
-//					styledText.redraw(0, styledText.getLinePixel(activeLine),
-//							width, styledText.getLineHeight(), true);
-//					styledText.redraw(0,
-//							styledText.getLinePixel(curActiveLine), width,
-//							styledText.getLineHeight(), true);
-//					curActiveLine = activeLine;
-//				}
+				// TODO - Implement Line numbering later
+				// int activeLine =
+				// styledText.getLineAtOffset(event.caretOffset);
+				// if (curActiveLine != activeLine) {
+				// int digits = 3;
+				// if (styledText.getLineCount() > 999)
+				// digits = (int) (Math.floor(Math.log10(styledText
+				// .getLineCount())) + 1);
+				// int width = digits * 12;
+				// styledText.redraw(0, styledText.getLinePixel(activeLine),
+				// width, styledText.getLineHeight(), true);
+				// styledText.redraw(0,
+				// styledText.getLinePixel(curActiveLine), width,
+				// styledText.getLineHeight(), true);
+				// curActiveLine = activeLine;
+				// }
 			}
 		});
 		styledText.addExtendedModifyListener(new ExtendedModifyListener() {
 			public void modifyText(ExtendedModifyEvent event) {
-				lblLineCount.setText("Lines: " + styledText.getLineCount() + ", Characters: " + styledText.getCharCount());
+				lblLineCount.setText("Lines: " + styledText.getLineCount()
+						+ ", Characters: " + styledText.getCharCount());
 				composite.layout();
-				//TODO - Implement Line numbering later
-//				int digits = 3;
-//				int lineCount = styledText.getLineCount();
-//				if (lineCount > 999)
-//					digits = (int) (Math.floor(Math.log10(styledText
-//							.getLineCount())) + 1);
-//				if (numDigits != digits) {
-//					numDigits = digits;
-//					styledText.redraw();
-//					return;
-//				}
-//				int startLine = styledText.getLineAtOffset(event.start);
-//				int endLine = styledText.getLineAtOffset(event.start
-//						+ event.length);
-//				if (startLine != endLine
-//						|| event.replacedText.contains(System.lineSeparator())) {
-//					styledText.redraw(0, styledText.getLinePixel(startLine),
-//							digits * 12, styledText.getLineHeight()
-//									* (lineCount - startLine), true);
-//				}
+				// TODO - Implement Line numbering later
+				// int digits = 3;
+				// int lineCount = styledText.getLineCount();
+				// if (lineCount > 999)
+				// digits = (int) (Math.floor(Math.log10(styledText
+				// .getLineCount())) + 1);
+				// if (numDigits != digits) {
+				// numDigits = digits;
+				// styledText.redraw();
+				// return;
+				// }
+				// int startLine = styledText.getLineAtOffset(event.start);
+				// int endLine = styledText.getLineAtOffset(event.start
+				// + event.length);
+				// if (startLine != endLine
+				// || event.replacedText.contains(System.lineSeparator())) {
+				// styledText.redraw(0, styledText.getLinePixel(startLine),
+				// digits * 12, styledText.getLineHeight()
+				// * (lineCount - startLine), true);
+				// }
 
 			}
 		});
 		styledText.addLineStyleListener(new LineStyleListener() {
 			public void lineGetStyle(LineStyleEvent event) {
-				
+
 				parseSyntax(event);
-				
-				//TODO - Implement Line numbering later
-//				int activeLine = styledText.getLineAtOffset(styledText
-//						.getCaretOffset());
-//				int currentLine = styledText.getLineAtOffset(event.lineOffset);
-//				event.bulletIndex = currentLine;
-//				int width = 36;
-//
-//				if (styledText.getLineCount() > 999)
-//					width = (int) ((Math.floor(Math.log10(styledText
-//							.getLineCount())) + 1) * 12);
-//				// Set the style, 12 pixles wide for each digit
-//				StyleRange style = new StyleRange();
-//				style.metrics = new GlyphMetrics(0, 0, width);
-//				if (activeLine == currentLine) {
-//					// style.background = Theme.highlightedLineColor;
-//				}
-//				event.bullet = new Bullet(ST.BULLET_NUMBER, style);
+
+				// TODO - Implement Line numbering later
+				// int activeLine = styledText.getLineAtOffset(styledText
+				// .getCaretOffset());
+				// int currentLine =
+				// styledText.getLineAtOffset(event.lineOffset);
+				// event.bulletIndex = currentLine;
+				// int width = 36;
+				//
+				// if (styledText.getLineCount() > 999)
+				// width = (int) ((Math.floor(Math.log10(styledText
+				// .getLineCount())) + 1) * 12);
+				// // Set the style, 12 pixles wide for each digit
+				// StyleRange style = new StyleRange();
+				// style.metrics = new GlyphMetrics(0, 0, width);
+				// if (activeLine == currentLine) {
+				// // style.background = Theme.highlightedLineColor;
+				// }
+				// event.bullet = new Bullet(ST.BULLET_NUMBER, style);
 			}
 		});
 		styledText.setBottomMargin(8);
@@ -358,28 +361,29 @@ public class NoteTitan {
 		composite.setLayout(gl_composite);
 
 		lblLineCount = new Label(composite, SWT.SHADOW_IN);
-		lblLineCount.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
+		lblLineCount.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
+				false, 1, 1));
 		lblLineCount.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		lblLineCount.setText("Lines: 0, Characters: 0");
 
 	}
 
 	protected void parseSyntax(LineStyleEvent event) {
-		 listener = new JavaTokenReader();
+		listener = new JavaTokenReader();
 		ANTLRInputStream input = new ANTLRInputStream(styledText.getText());
 		JavaLexer lexer = new JavaLexer(input);
 		lexer.removeErrorListeners();
-		
+
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		
+
 		event.styles = listener.getStyles(tokens, event.styles);
-		
+
 		List<Token> blockComments = tokens.getTokens(0, tokens.size() - 1,
-		JavaLexer.COMMENT);
+				JavaLexer.COMMENT);
 		if ((blockComments != null && blockComments.size() != numBlockComments)
-		|| (blockComments == null && numBlockComments  != 0)) {
-		numBlockComments = blockComments == null ? 0 : blockComments.size();
-		styledText.redraw();
+				|| (blockComments == null && numBlockComments != 0)) {
+			numBlockComments = blockComments == null ? 0 : blockComments.size();
+			styledText.redraw();
 		}
 	}
 
@@ -410,13 +414,12 @@ public class NoteTitan {
 		String temp = dlg.open();
 		if (temp != null) {
 			fileName = temp;
-		}
-
-		try {
-			FileManager.saveFileAs(fileName, styledText.getText());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				FileManager.saveFileAs(fileName, styledText.getText());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		// updateWindowTitle();

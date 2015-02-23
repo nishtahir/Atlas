@@ -6,20 +6,19 @@ import java.util.Comparator;
 
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Token;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
 
 import com.wolfden.java.notetitan.syntax.StyledTokenReader;
+import com.wolfden.java.notetitan.syntax.Theme;
+import com.wolfden.java.notetitan.syntax.ThemeManager;
+import com.wolfden.java.notetitan.util.ColorUtils;
 
 public class JavaTokenReader extends StyledTokenReader {
-	private static final String KEYWORDS = "abstract|continue|for|new|switch|assert"
-			+ "|default|goto|package|synchronized|boolean|do|if|private|this|break"
-			+ "|double|implements|protected|throw|byte|else|import|public|throws|case"
-			+ "|enum|instanceof|return|transient|catch|extends|int|short|try|char|final"
-			+ "|interface|static|void|class|finally|long|strictfp|volatile|const"
-			+ "|float|native|super|while";
+	ThemeManager manager = ThemeManager.getInstance();
+	Theme theme = manager.getThemes().get(0);
+	
+	private final String ACCESS_MODIFIERS = "public|private|protected";
 
 	@Override
 	public StyleRange[] getStyles(CommonTokenStream tokens,
@@ -27,52 +26,55 @@ public class JavaTokenReader extends StyledTokenReader {
 
 		styles.clear();
 		tokens.fill();
-
-		for (Token t : tokens.getTokens()) {
-			switch (t.getType()) {
-			case JavaLexer.PUBLIC:
-				addStyle(t.getStartIndex(), t.getStopIndex(),
-						new Color(Display.getCurrent(), 255, 0, 0));
+		for (Token token : tokens.getTokens()) {
+			switch (token.getType()) {
+			
+			case JavaLexer.StringLiteral:
+				styleToken(token, "StringLiteral");
 				break;
-			case JavaLexer.COMMENT:
-			case JavaLexer.LINE_COMMENT:
-				addStyle(t.getStartIndex(), t.getStopIndex(),
-						new Color(Display.getCurrent(), 255, 0, 0));
+				
+			case JavaLexer.IntegerLiteral:
+				styleToken(token, "IntegerLiteral");
 				break;
-			// case Verilog2001Lexer.One_line_comment:
-			// case Verilog2001Lexer.Block_comment:
-			// addStyle(t.getStartIndex(), t.getStopIndex(),
-			// Theme.commentColor);
-			// break;
-			// case Verilog2001Lexer.Real_number:
-			// case Verilog2001Lexer.Hex_number:
-			// case Verilog2001Lexer.Binary_number:
-			// case Verilog2001Lexer.Octal_number:
-			// case Verilog2001Lexer.Decimal_number:
-			// addStyle(t.getStartIndex(), t.getStopIndex(),
-			// Theme.valueColor);
-			// break;
-			// case Verilog2001Lexer.String:
-			// addStyle(t.getStartIndex(), t.getStopIndex(),
-			// Theme.stringColor);
-			// break;
+				
+			case JavaLexer.BooleanLiteral:
+				styleToken(token, "BooleanLiteral");
+				break;
+				
+			case JavaLexer.IF:
+			case JavaLexer.ELSE:
+				styleToken(token, "IfElse");
+				break;
 			default:
-				System.out.println("Token: " + t.getText());
-				if (t.getText().matches("[*!~+#\\-/:@|&{}?^=><\\]\\[,();]+")) {
-					addStyle(t.getStartIndex(), t.getStopIndex(), new Color(
-							Display.getCurrent(), 0, 0, 0));
-				} else if (t.getText().matches(KEYWORDS)) {
-					addStyle(t.getStartIndex(), t.getStopIndex(), new Color(
-							Display.getCurrent(), 45, 45, 45), SWT.BOLD);
+				if(token.getText().matches(ACCESS_MODIFIERS)){
+					styleToken(token, "ACCESS_MODIFIERS");
 				}
-				// } else if (t.getText().matches(VARIABLES)) {
-				// addStyle(t.getStartIndex(), t.getStopIndex(),
-				// Theme.varTypeColor);
-				// } else if (t.getText().matches(MODULE)) {
-				// addStyle(t.getStartIndex(), t.getStopIndex(),
-				// Theme.moduleColor, SWT.BOLD);
 			}
+
 		}
+
+		// for (Token t : tokens.getTokens()) {
+		// switch (t.getType()) {
+		// case JavaLexer.PUBLIC:
+		// addStyle(t.getStartIndex(), t.getStopIndex(),
+		// new Color(Display.getCurrent(), 255, 0, 0));
+		// break;
+		// case JavaLexer.COMMENT:
+		// case JavaLexer.LINE_COMMENT:
+		// addStyle(t.getStartIndex(), t.getStopIndex(),
+		// new Color(Display.getCurrent(), 255, 0, 0));
+		// break;
+		// default:
+		// System.out.println("Token: " + t.getText());
+		// if (t.getText().matches("[*!~+#\\-/:@|&{}?^=><\\]\\[,();]+")) {
+		// addStyle(t.getStartIndex(), t.getStopIndex(), new Color(
+		// Display.getCurrent(), 0, 0, 0));
+		// } else if (t.getText().matches(KEYWORDS)) {
+		// addStyle(t.getStartIndex(), t.getStopIndex(), new Color(
+		// Display.getCurrent(), 45, 45, 45), SWT.BOLD);
+		// }
+		// }
+		// }
 
 		if (curStyles != null)
 			styles.addAll(Arrays.asList(curStyles));
@@ -85,5 +87,10 @@ public class JavaTokenReader extends StyledTokenReader {
 		});
 		return styles.toArray(new StyleRange[styles.size()]);
 
+	}
+
+	private void styleToken(Token token, String key) {
+		Color color = theme.getHashTable().get(key);
+		addStyle(token.getStartIndex(), token.getStopIndex(), color);
 	}
 }
