@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan.syntax;
+package com.wolfden.java.atlas.syntax;
 
 import java.util.Hashtable;
 

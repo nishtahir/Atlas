@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan.util;
+package com.wolfden.java.atlas.util;
 
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Device;

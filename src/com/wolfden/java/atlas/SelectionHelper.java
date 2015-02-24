@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan;
+package com.wolfden.java.atlas;
 
 import org.eclipse.swt.SWT;
 

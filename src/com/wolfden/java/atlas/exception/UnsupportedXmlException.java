@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan.exception;
+package com.wolfden.java.atlas.exception;
 
 public class UnsupportedXmlException extends Exception {
 	private static final long serialVersionUID = 8143313371103787593L;

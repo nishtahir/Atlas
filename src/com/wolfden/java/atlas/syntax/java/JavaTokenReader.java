@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan.syntax.java;
+package com.wolfden.java.atlas.syntax.java;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,9 +9,9 @@ import org.antlr.v4.runtime.Token;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
 
-import com.wolfden.java.notetitan.syntax.StyledTokenReader;
-import com.wolfden.java.notetitan.syntax.Theme;
-import com.wolfden.java.notetitan.syntax.ThemeManager;
+import com.wolfden.java.atlas.syntax.StyledTokenReader;
+import com.wolfden.java.atlas.syntax.Theme;
+import com.wolfden.java.atlas.syntax.ThemeManager;
 
 public class JavaTokenReader extends StyledTokenReader {
 	ThemeManager manager = ThemeManager.getInstance();

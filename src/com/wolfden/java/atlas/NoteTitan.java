@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan;
+package com.wolfden.java.atlas;
 
 import java.io.IOException;
 import java.util.List;
@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
-import com.wolfden.java.notetitan.syntax.java.JavaLexer;
-import com.wolfden.java.notetitan.syntax.java.JavaTokenReader;
+import com.wolfden.java.atlas.syntax.java.JavaLexer;
+import com.wolfden.java.atlas.syntax.java.JavaTokenReader;
 
 public class NoteTitan {
 

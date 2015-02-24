@@ -10,8 +10,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import com.wolfden.java.notetitan.exception.UnsupportedXmlException;
-import com.wolfden.java.notetitan.syntax.ThemeManager;
+import com.wolfden.java.atlas.exception.UnsupportedXmlException;
+import com.wolfden.java.atlas.syntax.ThemeManager;
 
 public class ThemeManagerTest {
 

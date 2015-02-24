@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan.util;
+package com.wolfden.java.atlas.util;
 
 import java.io.BufferedInputStream;
 import java.io.File;

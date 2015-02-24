@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan.syntax;
+package com.wolfden.java.atlas.syntax;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +17,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import com.wolfden.java.notetitan.exception.UnsupportedXmlException;
-import com.wolfden.java.notetitan.util.ColorUtils;
+import com.wolfden.java.atlas.exception.UnsupportedXmlException;
+import com.wolfden.java.atlas.util.ColorUtils;
 
 public class ThemeManager {
 

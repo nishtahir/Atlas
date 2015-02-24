@@ -6,7 +6,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
 import org.junit.Test;
 
-import com.wolfden.java.notetitan.util.ColorUtils;
+import com.wolfden.java.atlas.util.ColorUtils;
 
 public class ColorUtilsTest {
 

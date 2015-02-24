@@ -1,17 +1,24 @@
-### Simple Text editor using eclipse SWT. ###
+# Atlas #
 
-Currently work in progress.
+Atlas is a decent text editor application with syntax highlighting.
 
+### Why yet another text editor? ###
 
+* It was originally a learning project to work with SWT. I thought open sourcing it was a good idea.
 
-**Dependencies**
+### Dependencies ###
 
-Eclipse SWT - https://www.eclipse.org/swt/
+* Eclipse SWT
+* ANTLR 4.5
 
-Currently built for Mac OSX
+### Contribution guidelines ###
 
+* All contributions are welcome
+* Unit tests are appreciated
+* Report bugs using the issue tracker.
+* Add feature requests using the issue tracker
 
-**License**
+### LICENSE ###
 
 Copyright 2015 Nish Tahir
 
