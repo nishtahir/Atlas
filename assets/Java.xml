@@ -8,4 +8,7 @@
 	
 	<!-- public private protected -->
 	<style name="ACCESS_MODIFIERS" color="1F8181"/>
+	
+	<!-- int|float|double|boolean|char|long|short -->
+	<style name="VARIABLES" color="F55D79"/>
 </theme>

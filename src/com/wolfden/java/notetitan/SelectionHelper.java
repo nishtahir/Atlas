@@ -1,13 +1,9 @@
 package com.wolfden.java.notetitan;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.widgets.MessageBox;
 
 /**
- * Helper class to help manage Selection listener implementations and Menu
- * Accelerators
+ * Helper class to help manage Menu Accelerators
  * 
  * @author Nish
  *

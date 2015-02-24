@@ -12,13 +12,13 @@ import org.eclipse.swt.graphics.Color;
 import com.wolfden.java.notetitan.syntax.StyledTokenReader;
 import com.wolfden.java.notetitan.syntax.Theme;
 import com.wolfden.java.notetitan.syntax.ThemeManager;
-import com.wolfden.java.notetitan.util.ColorUtils;
 
 public class JavaTokenReader extends StyledTokenReader {
 	ThemeManager manager = ThemeManager.getInstance();
 	Theme theme = manager.getThemes().get(0);
-	
+
 	private final String ACCESS_MODIFIERS = "public|private|protected";
+	private final String VARIABLES = "int|float|double|boolean|char|long|short";
 
 	@Override
 	public StyleRange[] getStyles(CommonTokenStream tokens,
@@ -28,26 +28,28 @@ public class JavaTokenReader extends StyledTokenReader {
 		tokens.fill();
 		for (Token token : tokens.getTokens()) {
 			switch (token.getType()) {
-			
+
 			case JavaLexer.StringLiteral:
 				styleToken(token, "StringLiteral");
 				break;
-				
+
 			case JavaLexer.IntegerLiteral:
 				styleToken(token, "IntegerLiteral");
 				break;
-				
+
 			case JavaLexer.BooleanLiteral:
 				styleToken(token, "BooleanLiteral");
 				break;
-				
+
 			case JavaLexer.IF:
 			case JavaLexer.ELSE:
 				styleToken(token, "IfElse");
 				break;
 			default:
-				if(token.getText().matches(ACCESS_MODIFIERS)){
+				if (token.getText().matches(ACCESS_MODIFIERS)) {
 					styleToken(token, "ACCESS_MODIFIERS");
+				} else if (token.getText().matches(VARIABLES)) {
+					styleToken(token, "VARIABLES");
 				}
 			}
 

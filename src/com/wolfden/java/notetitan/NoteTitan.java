@@ -354,7 +354,8 @@ public class NoteTitan {
 		composite.setBackground(SWTResourceManager.getColor(105, 105, 105));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false, 1, 1));
-		GridLayout gl_composite = new GridLayout(1, false);
+		GridLayout gl_composite = new GridLayout(2, false);
+		gl_composite.marginRight = 4;
 		gl_composite.marginLeft = 4;
 		gl_composite.marginBottom = 2;
 		gl_composite.marginHeight = 2;
@@ -365,6 +366,19 @@ public class NoteTitan {
 				false, 1, 1));
 		lblLineCount.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		lblLineCount.setText("Lines: 0, Characters: 0");
+		
+		Label lblPlainText = new Label(composite, SWT.NONE);
+		lblPlainText.setForeground(SWTResourceManager.getColor(245, 245, 245));
+		lblPlainText.setText("Plain Text");
+		
+		Menu menu_5 = new Menu(lblPlainText);
+		lblPlainText.setMenu(menu_5);
+		
+		MenuItem mntmJava = new MenuItem(menu_5, SWT.NONE);
+		mntmJava.setText("Java");
+		
+		MenuItem mntmPlainText = new MenuItem(menu_5, SWT.NONE);
+		mntmPlainText.setText("Plain Text");
 
 	}
 
@@ -448,5 +462,4 @@ public class NoteTitan {
 		}
 		return null;
 	}
-
 }
