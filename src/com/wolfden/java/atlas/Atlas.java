@@ -31,9 +31,9 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import com.wolfden.java.atlas.syntax.java.JavaLexer;
 import com.wolfden.java.atlas.syntax.java.JavaTokenReader;
 
-public class NoteTitan {
+public class Atlas {
 
-	protected Shell shlNoteTitan;
+	protected Shell shlAtlas;
 	private StyledText styledText;
 	int numDigits = 3;
 	int curActiveLine = 0;
@@ -49,7 +49,7 @@ public class NoteTitan {
 	 */
 	public static void main(String[] args) {
 		try {
-			NoteTitan window = new NoteTitan();
+			Atlas window = new Atlas();
 			window.open();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -60,7 +60,7 @@ public class NoteTitan {
 	 * Open the window.
 	 */
 	public void open() {
-		Display.setAppName("Note Titan");
+		Display.setAppName("Atlas");
 		Display display = Display.getDefault();
 
 		Menu systemMenu = Display.getDefault().getSystemMenu();
@@ -82,9 +82,9 @@ public class NoteTitan {
 			});
 
 			createContents();
-			shlNoteTitan.open();
-			shlNoteTitan.layout();
-			while (!shlNoteTitan.isDisposed()) {
+			shlAtlas.open();
+			shlAtlas.layout();
+			while (!shlAtlas.isDisposed()) {
 				if (!display.readAndDispatch()) {
 					display.sleep();
 				}
@@ -93,7 +93,7 @@ public class NoteTitan {
 	}
 
 	protected void showAboutDialog() {
-		MessageBox about = new MessageBox(shlNoteTitan);
+		MessageBox about = new MessageBox(shlAtlas);
 		about.setText("About Note Titan");
 		about.setMessage("Copyright Nish Tahir 2015. \n Version 0.1 alpha");
 		about.open();
@@ -105,18 +105,18 @@ public class NoteTitan {
 	 * @wbp.parser.entryPoint
 	 */
 	protected void createContents() {
-		shlNoteTitan = new Shell();
-		shlNoteTitan.setSize(640, 480);
-		shlNoteTitan.setText("Note Titan");
-		GridLayout gl_shlNoteTitan = new GridLayout(1, false);
-		gl_shlNoteTitan.horizontalSpacing = 0;
-		gl_shlNoteTitan.verticalSpacing = 0;
-		gl_shlNoteTitan.marginWidth = 0;
-		gl_shlNoteTitan.marginHeight = 0;
-		shlNoteTitan.setLayout(gl_shlNoteTitan);
+		shlAtlas = new Shell();
+		shlAtlas.setSize(640, 480);
+		shlAtlas.setText("Atlas");
+		GridLayout gl_shlAtlas = new GridLayout(1, false);
+		gl_shlAtlas.horizontalSpacing = 0;
+		gl_shlAtlas.verticalSpacing = 0;
+		gl_shlAtlas.marginWidth = 0;
+		gl_shlAtlas.marginHeight = 0;
+		shlAtlas.setLayout(gl_shlAtlas);
 
-		Menu menu = new Menu(shlNoteTitan, SWT.BAR);
-		shlNoteTitan.setMenuBar(menu);
+		Menu menu = new Menu(shlAtlas, SWT.BAR);
+		shlAtlas.setMenuBar(menu);
 
 		MenuItem mntmFile = new MenuItem(menu, SWT.CASCADE);
 		mntmFile.setText("File");
@@ -223,7 +223,7 @@ public class NoteTitan {
 		mntmSelectAll_1.setAccelerator(SelectionHelper.SWT_SELECT_ALL);
 		;
 
-		styledText = new StyledText(shlNoteTitan, SWT.V_SCROLL | SWT.H_SCROLL);
+		styledText = new StyledText(shlAtlas, SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText
 				.setFont(SWTResourceManager.getFont("Monaco", 12, SWT.NORMAL));
 		styledText.setAlwaysShowScrollBars(false);
@@ -350,7 +350,7 @@ public class NoteTitan {
 			}
 		});
 
-		composite = new Composite(shlNoteTitan, SWT.NONE);
+		composite = new Composite(shlAtlas, SWT.NONE);
 		composite.setBackground(SWTResourceManager.getColor(105, 105, 105));
 		composite.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false,
 				false, 1, 1));
@@ -402,7 +402,7 @@ public class NoteTitan {
 	}
 
 	protected void openFile() {
-		FileDialog fileDialog = new FileDialog(shlNoteTitan, SWT.OPEN);
+		FileDialog fileDialog = new FileDialog(shlAtlas, SWT.OPEN);
 		fileDialog.setText("Open...");
 		String filePath = fileDialog.open();
 		if (filePath != null) {
@@ -411,14 +411,14 @@ public class NoteTitan {
 			try {
 				styledText.setText(FileManager.openFile(filePath));
 			} catch (IOException e) {
-				ErrorUtils.showErrorMessageBox(e, shlNoteTitan);
+				ErrorUtils.showErrorMessageBox(e, shlAtlas);
 				e.printStackTrace();
 			}
 		}
 	}
 
 	public void saveAs() {
-		FileDialog dlg = new FileDialog(shlNoteTitan, SWT.SAVE);
+		FileDialog dlg = new FileDialog(shlAtlas, SWT.SAVE);
 		String fileName = FileManager.getFileName();
 
 		if (fileName != null) {
