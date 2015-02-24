@@ -8,8 +8,8 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.wolfden.java.notetitan.FileManager;
-import com.wolfden.java.notetitan.util.FileUtils;
+import com.wolfden.java.atlas.FileManager;
+import com.wolfden.java.atlas.util.FileUtils;
 
 public class TestFileUtils {
 	private File testFile;

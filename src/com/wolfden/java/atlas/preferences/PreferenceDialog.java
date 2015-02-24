@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan.preferences;
+package com.wolfden.java.atlas.preferences;
 
 import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;

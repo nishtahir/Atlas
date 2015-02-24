@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan.syntax.java;
+package com.wolfden.java.atlas.syntax.java;
 
 // Generated from /Users/Nish/Developer/IdeaProjects/Antlr/src/Java.g4 by ANTLR 4.5
 import org.antlr.v4.runtime.Lexer;

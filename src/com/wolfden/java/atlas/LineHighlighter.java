@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan;
+package com.wolfden.java.atlas;
 
 import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
