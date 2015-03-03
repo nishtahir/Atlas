@@ -9,6 +9,16 @@
 	<!-- public private protected -->
 	<style name="ACCESS_MODIFIERS" color="1F8181"/>
 	
+	<!-- KEYWORDS -->
+	<style name="KEYWORDS" color="FF5E5E"/>
+	
 	<!-- int|float|double|boolean|char|long|short -->
 	<style name="VARIABLES" color="F55D79"/>
+	
+	<!-- @override|@param|... -->
+	<style name="ANNOTATIONS" color="A09688"/>
+	<style name="OPERATORS" color="F2BC79"/>
+	
+	<style name="IMPORT_DECLARATION" color="FF0000"/>	
+	
 </theme>

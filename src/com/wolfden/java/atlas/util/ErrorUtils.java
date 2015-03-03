@@ -1,4 +1,4 @@
-package com.wolfden.java.atlas;
+package com.wolfden.java.atlas.util;
 
 import java.io.IOException;
 

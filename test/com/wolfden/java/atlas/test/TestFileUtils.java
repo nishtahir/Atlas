@@ -1,4 +1,4 @@
-package com.wolfden.java.notetitan.test;
+package com.wolfden.java.atlas.test;
 
 import static org.junit.Assert.*;
 

@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
@@ -16,6 +18,7 @@ import org.eclipse.swt.custom.LineStyleListener;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -25,13 +28,18 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.wolfden.java.atlas.syntax.java.JavaLexer;
+import com.wolfden.java.atlas.syntax.java.JavaParser;
+import com.wolfden.java.atlas.syntax.java.JavaTokenListener;
 import com.wolfden.java.atlas.syntax.java.JavaTokenReader;
+import com.wolfden.java.atlas.util.ErrorUtils;
 
 public class Atlas {
+	private static final String AppName = "Atlas";
 
 	protected Shell shlAtlas;
 	private StyledText styledText;
@@ -60,7 +68,7 @@ public class Atlas {
 	 * Open the window.
 	 */
 	public void open() {
-		Display.setAppName("Atlas");
+		Display.setAppName(AppName);
 		Display display = Display.getDefault();
 
 		Menu systemMenu = Display.getDefault().getSystemMenu();
@@ -82,6 +90,16 @@ public class Atlas {
 			});
 
 			createContents();
+
+			Monitor primary = display.getPrimaryMonitor();
+			Rectangle bounds = primary.getBounds();
+			Rectangle rect = shlAtlas.getBounds();
+
+			int x = bounds.x + (bounds.width - rect.width) / 2;
+			int y = bounds.y + (bounds.height - rect.height) / 2;
+
+			shlAtlas.setLocation(x, y);
+
 			shlAtlas.open();
 			shlAtlas.layout();
 			while (!shlAtlas.isDisposed()) {
@@ -94,9 +112,17 @@ public class Atlas {
 
 	protected void showAboutDialog() {
 		MessageBox about = new MessageBox(shlAtlas);
-		about.setText("About Note Titan");
+		about.setText("About " + AppName);
 		about.setMessage("Copyright Nish Tahir 2015. \n Version 0.1 alpha");
 		about.open();
+	}
+
+	private static MenuItem getSystemItem(Menu menu, int id) {
+		for (MenuItem item : menu.getItems()) {
+			if (item.getID() == id)
+				return item;
+		}
+		return null;
 	}
 
 	/**
@@ -168,7 +194,6 @@ public class Atlas {
 		MenuItem mntmRedo = new MenuItem(menu_3, SWT.NONE);
 		mntmRedo.setText("Redo");
 		mntmRedo.setAccelerator(SelectionHelper.SWT_REDO);
-		;
 
 		new MenuItem(menu_3, SWT.SEPARATOR);
 
@@ -203,8 +228,23 @@ public class Atlas {
 		mntmPaste.setAccelerator(SelectionHelper.SWT_PASTE);
 		;
 
-		MenuItem mntmView = new MenuItem(menu, SWT.NONE);
+		MenuItem mntmView = new MenuItem(menu, SWT.CASCADE);
 		mntmView.setText("View");
+
+		Menu menu_6 = new Menu(mntmView);
+		mntmView.setMenu(menu_6);
+
+		MenuItem mntmWordWrap = new MenuItem(menu_6, SWT.CHECK);
+		mntmWordWrap.setText("Word wrap");
+
+		MenuItem mntmSyntax = new MenuItem(menu_6, SWT.CASCADE);
+		mntmSyntax.setText("Syntax");
+
+		Menu menu_7 = new Menu(mntmSyntax);
+		mntmSyntax.setMenu(menu_7);
+
+		MenuItem mntmPlainText_1 = new MenuItem(menu_7, SWT.NONE);
+		mntmPlainText_1.setText("Plain text");
 
 		MenuItem mntmSelection = new MenuItem(menu, SWT.CASCADE);
 		mntmSelection.setText("Selection");
@@ -366,17 +406,17 @@ public class Atlas {
 				false, 1, 1));
 		lblLineCount.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		lblLineCount.setText("Lines: 0, Characters: 0");
-		
+
 		Label lblPlainText = new Label(composite, SWT.NONE);
 		lblPlainText.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		lblPlainText.setText("Plain Text");
-		
+
 		Menu menu_5 = new Menu(lblPlainText);
 		lblPlainText.setMenu(menu_5);
-		
+
 		MenuItem mntmJava = new MenuItem(menu_5, SWT.NONE);
 		mntmJava.setText("Java");
-		
+
 		MenuItem mntmPlainText = new MenuItem(menu_5, SWT.NONE);
 		mntmPlainText.setText("Plain Text");
 
@@ -389,7 +429,15 @@ public class Atlas {
 		lexer.removeErrorListeners();
 
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		// listener.getStyles(tokens, event.styles);
 
+//		JavaParser parser = new JavaParser(tokens);
+//		ParserRuleContext ctx = parser.compilationUnit();
+//
+//		ParseTreeWalker walker = new ParseTreeWalker(); // create standard
+//														// walker
+//		JavaTokenListener extractor = new JavaTokenListener(parser);
+//		walker.walk(extractor, ctx); // initiate walk of tree with listener
 		event.styles = listener.getStyles(tokens, event.styles);
 
 		List<Token> blockComments = tokens.getTokens(0, tokens.size() - 1,
@@ -453,13 +501,5 @@ public class Atlas {
 
 	public void selectAll() {
 		styledText.selectAll();
-	}
-
-	static MenuItem getSystemItem(Menu menu, int id) {
-		for (MenuItem item : menu.getItems()) {
-			if (item.getID() == id)
-				return item;
-		}
-		return null;
 	}
 }

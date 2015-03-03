@@ -5,20 +5,31 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.Display;
 
 import com.wolfden.java.atlas.syntax.StyledTokenReader;
 import com.wolfden.java.atlas.syntax.Theme;
 import com.wolfden.java.atlas.syntax.ThemeManager;
+import com.wolfden.java.atlas.syntax.java.JavaTokenListener.StylableTokenListener;
 
 public class JavaTokenReader extends StyledTokenReader {
 	ThemeManager manager = ThemeManager.getInstance();
 	Theme theme = manager.getThemes().get(0);
 
 	private final String ACCESS_MODIFIERS = "public|private|protected";
+	private final String KEYWORDS = "abstract|continue|for|new|switch|assert|default|"
+			+ "goto|package|synchronized|boolean|do|this|break|double|implements|throw|"
+			+ "import|throws|case|enum|instanceof|return|transient|catch|extends|try|final|"
+			+ "interface|static|void|class|finally|strictfp|volatile|const|native|super|while";
 	private final String VARIABLES = "int|float|double|boolean|char|long|short";
+	private final String OPERATORS = "[*!~+#\\-/:|&?^=><\\]\\[]+";
+	private final String ANNOTATIONS = "(@)((?:[a-z][a-z0-9_]*))";
 
 	@Override
 	public StyleRange[] getStyles(CommonTokenStream tokens,
@@ -45,38 +56,36 @@ public class JavaTokenReader extends StyledTokenReader {
 			case JavaLexer.ELSE:
 				styleToken(token, "IfElse");
 				break;
+
 			default:
+				System.out.println("Text:" + token.getText());
 				if (token.getText().matches(ACCESS_MODIFIERS)) {
 					styleToken(token, "ACCESS_MODIFIERS");
 				} else if (token.getText().matches(VARIABLES)) {
 					styleToken(token, "VARIABLES");
+				} else if (token.getText().matches(ANNOTATIONS)) {
+					styleToken(token, "ANNOTATIONS", SWT.BOLD);
+				} else if (token.getText().matches(OPERATORS)) {
+					styleToken(token, "OPERATORS", SWT.BOLD);
+				} else if (token.getText().matches(KEYWORDS)) {
+					styleToken(token, "KEYWORDS");
 				}
 			}
 
 		}
 
-		// for (Token t : tokens.getTokens()) {
-		// switch (t.getType()) {
-		// case JavaLexer.PUBLIC:
-		// addStyle(t.getStartIndex(), t.getStopIndex(),
-		// new Color(Display.getCurrent(), 255, 0, 0));
-		// break;
-		// case JavaLexer.COMMENT:
-		// case JavaLexer.LINE_COMMENT:
-		// addStyle(t.getStartIndex(), t.getStopIndex(),
-		// new Color(Display.getCurrent(), 255, 0, 0));
-		// break;
-		// default:
-		// System.out.println("Token: " + t.getText());
-		// if (t.getText().matches("[*!~+#\\-/:@|&{}?^=><\\]\\[,();]+")) {
-		// addStyle(t.getStartIndex(), t.getStopIndex(), new Color(
-		// Display.getCurrent(), 0, 0, 0));
-		// } else if (t.getText().matches(KEYWORDS)) {
-		// addStyle(t.getStartIndex(), t.getStopIndex(), new Color(
-		// Display.getCurrent(), 45, 45, 45), SWT.BOLD);
-		// }
-		// }
-		// }
+		JavaParser parser = new JavaParser(tokens);
+		ParserRuleContext ctx = parser.compilationUnit();
+		ParseTreeWalker walker = new ParseTreeWalker();
+		JavaTokenListener extractor = new JavaTokenListener(
+				new StylableTokenListener() {
+
+					@Override
+					public void onExitAnnotation(int start, int stop) {
+						styleRange(start, stop, "ANNOTATIONS");
+					}
+				});
+		walker.walk(extractor, ctx); // initiate walk of tree with listener
 
 		if (curStyles != null)
 			styles.addAll(Arrays.asList(curStyles));
@@ -91,8 +100,18 @@ public class JavaTokenReader extends StyledTokenReader {
 
 	}
 
+	private void styleToken(Token token, String key, int style) {
+		Color color = theme.getHashTable().get(key);
+		addStyle(token.getStartIndex(), token.getStopIndex(), color, SWT.BOLD);
+	}
+
 	private void styleToken(Token token, String key) {
 		Color color = theme.getHashTable().get(key);
 		addStyle(token.getStartIndex(), token.getStopIndex(), color);
+	}
+
+	private void styleRange(int startIndex, int stopIndex, String key) {
+		Color color = theme.getHashTable().get(key);
+		addStyle(startIndex, stopIndex, color);
 	}
 }
