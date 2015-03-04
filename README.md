@@ -2,7 +2,7 @@
 
 Atlas is a decent text editor application with syntax highlighting.
 
-![Untitled.png](https://bitbucket.org/repo/d5b8M5/images/1568229767-Untitled.png)
+![atlas_screenshot_1.png](https://bitbucket.org/repo/d5b8M5/images/3113262366-atlas_screenshot_1.png)
 
 ### Why yet another text editor? ###
 
