@@ -13,7 +13,8 @@
 	<style name="KEYWORDS" color="FF5E5E"/>
 	
 	<!-- int|float|double|boolean|char|long|short -->
-	<style name="VARIABLES" color="F55D79"/>
+	<!-- <style name="VARIABLES" color="F55D79"/> -->
+	<style name="VARIABLES" color="6699CC"/>
 	
 	<!-- @override|@param|... -->
 	<style name="ANNOTATIONS" color="A09688"/>

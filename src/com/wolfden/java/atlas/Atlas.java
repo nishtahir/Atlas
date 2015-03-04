@@ -409,7 +409,7 @@ public class Atlas {
 
 		Label lblPlainText = new Label(composite, SWT.NONE);
 		lblPlainText.setForeground(SWTResourceManager.getColor(245, 245, 245));
-		lblPlainText.setText("Plain Text");
+		lblPlainText.setText("Java");
 
 		Menu menu_5 = new Menu(lblPlainText);
 		lblPlainText.setMenu(menu_5);
