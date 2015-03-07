@@ -11,7 +11,6 @@ import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.widgets.Display;
 
 import com.wolfden.java.atlas.syntax.StyledTokenReader;
 import com.wolfden.java.atlas.syntax.Theme;
@@ -27,9 +26,11 @@ public class JavaTokenReader extends StyledTokenReader {
 			+ "goto|package|synchronized|boolean|do|this|break|double|implements|throw|"
 			+ "import|throws|case|enum|instanceof|return|transient|catch|extends|try|final|"
 			+ "interface|static|void|class|finally|strictfp|volatile|const|native|super|while";
+	
 	private final String VARIABLES = "int|float|double|boolean|char|long|short";
-	private final String OPERATORS = "[*!~+#\\-/:|&?^=><\\]\\[]+";
+	private final String OPERATORS = "[*!~+#\\-/:|&?^=><]+";
 	private final String ANNOTATIONS = "(@)((?:[a-z][a-z0-9_]*))";
+	private final String ClASS_NAME = "[A-Z](.*)";
 
 	@Override
 	public StyleRange[] getStyles(CommonTokenStream tokens,
@@ -69,6 +70,8 @@ public class JavaTokenReader extends StyledTokenReader {
 					styleToken(token, "OPERATORS", SWT.BOLD);
 				} else if (token.getText().matches(KEYWORDS)) {
 					styleToken(token, "KEYWORDS");
+				} else if (token.getText().matches(ClASS_NAME)){
+					styleToken(token, "ACCESS_MODIFIERS");
 				}
 			}
 
