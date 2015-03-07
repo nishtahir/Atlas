@@ -2,6 +2,8 @@
 
 Atlas is a decent text editor application with syntax highlighting.
 
+![atlas_screenshot_1.png](https://bitbucket.org/repo/d5b8M5/images/3113262366-atlas_screenshot_1.png)
+
 ### Why yet another text editor? ###
 
 * It was originally a learning project to work with SWT. I thought open sourcing it was a good idea.
