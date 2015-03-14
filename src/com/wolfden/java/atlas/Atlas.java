@@ -5,9 +5,7 @@ import java.util.List;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
@@ -32,11 +30,13 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
+import com.wolfden.java.atlas.preferences.PreferenceManager;
+import com.wolfden.java.atlas.syntax.StyledTokenReader;
 import com.wolfden.java.atlas.syntax.java.JavaLexer;
-import com.wolfden.java.atlas.syntax.java.JavaParser;
-import com.wolfden.java.atlas.syntax.java.JavaTokenListener;
 import com.wolfden.java.atlas.syntax.java.JavaTokenReader;
 import com.wolfden.java.atlas.util.ErrorUtils;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 
 public class Atlas {
 	private static final String AppName = "Atlas";
@@ -48,7 +48,13 @@ public class Atlas {
 	private Label lblLineCount;
 	private Composite composite;
 	private int numBlockComments = -1;
-	private JavaTokenReader listener;
+	private StyledTokenReader listener;
+	private PreferenceManager preferenceManager;
+
+	public Atlas() {
+		preferenceManager = PreferenceManager.getInstance();
+		preferenceManager.init();
+	}
 
 	/**
 	 * Launch the application.
@@ -110,10 +116,16 @@ public class Atlas {
 		}
 	}
 
+	/**
+	 * Show
+	 */
 	protected void showAboutDialog() {
 		MessageBox about = new MessageBox(shlAtlas);
 		about.setText("About " + AppName);
-		about.setMessage("Copyright Nish Tahir 2015. \n Version 0.1 alpha");
+		about.setMessage("Copyright Nish Tahir 2015. \n Version: "
+				+ preferenceManager
+						.getPreference(PreferenceManager.KEY_VERSION)
+				+ " alpha");
 		about.open();
 	}
 
@@ -131,8 +143,20 @@ public class Atlas {
 	 * @wbp.parser.entryPoint
 	 */
 	protected void createContents() {
+		int width = Integer.valueOf(preferenceManager.getPreference(PreferenceManager.KEY_WINDOW_WIDTH));
+		int height = Integer.valueOf(preferenceManager.getPreference(PreferenceManager.KEY_WINDOW_HEIGHT));
 		shlAtlas = new Shell();
-		shlAtlas.setSize(640, 480);
+		shlAtlas.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellClosed(ShellEvent e) {
+				int newWidth = shlAtlas.getSize().x;
+				int newHeight = shlAtlas.getSize().y;
+				preferenceManager.setPreference(PreferenceManager.KEY_WINDOW_WIDTH, newWidth);
+				preferenceManager.setPreference(PreferenceManager.KEY_WINDOW_HEIGHT, newHeight);
+				preferenceManager.commit();
+			}
+		});
+		shlAtlas.setSize(width, height);
 		shlAtlas.setText("Atlas");
 		GridLayout gl_shlAtlas = new GridLayout(1, false);
 		gl_shlAtlas.horizontalSpacing = 0;
@@ -422,6 +446,10 @@ public class Atlas {
 
 	}
 
+	/**
+	 * 
+	 * @param event
+	 */
 	protected void parseSyntax(LineStyleEvent event) {
 		listener = new JavaTokenReader();
 		ANTLRInputStream input = new ANTLRInputStream(styledText.getText());
@@ -429,15 +457,6 @@ public class Atlas {
 		lexer.removeErrorListeners();
 
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		// listener.getStyles(tokens, event.styles);
-
-//		JavaParser parser = new JavaParser(tokens);
-//		ParserRuleContext ctx = parser.compilationUnit();
-//
-//		ParseTreeWalker walker = new ParseTreeWalker(); // create standard
-//														// walker
-//		JavaTokenListener extractor = new JavaTokenListener(parser);
-//		walker.walk(extractor, ctx); // initiate walk of tree with listener
 		event.styles = listener.getStyles(tokens, event.styles);
 
 		List<Token> blockComments = tokens.getTokens(0, tokens.size() - 1,
@@ -465,6 +484,9 @@ public class Atlas {
 		}
 	}
 
+	/**
+	 * Save as command
+	 */
 	public void saveAs() {
 		FileDialog dlg = new FileDialog(shlAtlas, SWT.SAVE);
 		String fileName = FileManager.getFileName();
@@ -487,18 +509,30 @@ public class Atlas {
 		// updateWindowTitle();
 	}
 
+	/**
+	 * Copy command
+	 */
 	public void copy() {
 		styledText.copy();
 	}
 
+	/**
+	 * Cut command
+	 */
 	public void cut() {
 		styledText.cut();
 	}
 
+	/**
+	 * Paste command
+	 */
 	public void paste() {
 		styledText.paste();
 	}
 
+	/**
+	 * Select all text command
+	 */
 	public void selectAll() {
 		styledText.selectAll();
 	}

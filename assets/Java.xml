@@ -21,5 +21,6 @@
 	<style name="OPERATORS" color="F2BC79"/>
 	
 	<style name="IMPORT_DECLARATION" color="FF0000"/>	
+	<style name="ClASS_NAME" color="FF0000"/>	
 	
 </theme>

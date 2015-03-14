@@ -41,6 +41,9 @@ public class JavaTokenReader extends StyledTokenReader {
 		for (Token token : tokens.getTokens()) {
 			switch (token.getType()) {
 
+			case JavaLexer.LINE_COMMENT:
+				styleToken(token, "VARIABLES");
+				break;
 			case JavaLexer.StringLiteral:
 				styleToken(token, "StringLiteral");
 				break;
@@ -87,6 +90,7 @@ public class JavaTokenReader extends StyledTokenReader {
 					public void onExitAnnotation(int start, int stop) {
 						styleRange(start, stop, "ANNOTATIONS");
 					}
+					
 				});
 		walker.walk(extractor, ctx); // initiate walk of tree with listener
 

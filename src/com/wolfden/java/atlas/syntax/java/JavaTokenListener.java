@@ -55,8 +55,6 @@ public class JavaTokenListener extends JavaBaseListener {
 		System.out.println("Literal: " + ctx.getText());
 	}
 
-
-
 	public interface StylableTokenListener{
 		public void onExitAnnotation(int start, int stop);
 	}
