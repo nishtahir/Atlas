@@ -12,10 +12,25 @@ public abstract class StyledTokenReader {
 
 	public abstract StyleRange[] getStyles(CommonTokenStream tokens, StyleRange[] styleRange);
 
+	/**
+	 * Applies style to token
+	 * 
+	 * @param start starting position of the token
+	 * @param stop stopping position of the token
+	 * @param foreground text foreground color
+	 */
 	protected void addStyle(int start, int stop, Color foreground) {
 		addStyle(start, stop, foreground, SWT.NONE);
 	}
 
+	/**
+	 * Applies style to token
+	 *
+	 * @param start starting position of the token
+	 * @param stop stopping position of the token
+	 * @param foreground text foreground color
+	 * @param style font style to apply to token
+	 */
 	protected void addStyle(int start, int stop, Color foreground, int style) {
 		int length = stop - start + 1;
 		StyleRange styleRange = new StyleRange();

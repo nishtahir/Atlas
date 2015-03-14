@@ -34,7 +34,9 @@ import com.wolfden.java.atlas.preferences.PreferenceManager;
 import com.wolfden.java.atlas.syntax.StyledTokenReader;
 import com.wolfden.java.atlas.syntax.java.JavaLexer;
 import com.wolfden.java.atlas.syntax.java.JavaTokenReader;
+import com.wolfden.java.atlas.syntax.plaintext.PlainTextTokenReader;
 import com.wolfden.java.atlas.util.ErrorUtils;
+
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 
@@ -48,7 +50,7 @@ public class Atlas {
 	private Label lblLineCount;
 	private Composite composite;
 	private int numBlockComments = -1;
-	private StyledTokenReader listener;
+	private StyledTokenReader styledTokenReader;
 	private PreferenceManager preferenceManager;
 
 	public Atlas() {
@@ -433,17 +435,32 @@ public class Atlas {
 
 		Label lblPlainText = new Label(composite, SWT.NONE);
 		lblPlainText.setForeground(SWTResourceManager.getColor(245, 245, 245));
-		lblPlainText.setText("Java");
+		lblPlainText.setText(preferenceManager.getPreference("language"));
 
 		Menu menu_5 = new Menu(lblPlainText);
 		lblPlainText.setMenu(menu_5);
 
 		MenuItem mntmJava = new MenuItem(menu_5, SWT.NONE);
 		mntmJava.setText("Java");
+		mntmJava.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				preferenceManager.setPreference("language", "Java");
+				lblPlainText.setText("Java");
+				styledText.redraw();
+			}
+		});
 
 		MenuItem mntmPlainText = new MenuItem(menu_5, SWT.NONE);
 		mntmPlainText.setText("Plain Text");
-
+		mntmPlainText.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				preferenceManager.setPreference("language", "text");
+				lblPlainText.setText("Plain text");
+				styledText.redraw();
+			}
+		});
 	}
 
 	/**
@@ -451,21 +468,26 @@ public class Atlas {
 	 * @param event
 	 */
 	protected void parseSyntax(LineStyleEvent event) {
-		listener = new JavaTokenReader();
+		String language = preferenceManager.getPreference("language");
+		if(language.equals("Java")){
+			styledTokenReader = new JavaTokenReader();
+		} else{
+			styledTokenReader = new PlainTextTokenReader();			
+		}
 		ANTLRInputStream input = new ANTLRInputStream(styledText.getText());
 		JavaLexer lexer = new JavaLexer(input);
 		lexer.removeErrorListeners();
 
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
-		event.styles = listener.getStyles(tokens, event.styles);
+		event.styles = styledTokenReader.getStyles(tokens, event.styles);
 
-		List<Token> blockComments = tokens.getTokens(0, tokens.size() - 1,
-				JavaLexer.COMMENT);
-		if ((blockComments != null && blockComments.size() != numBlockComments)
-				|| (blockComments == null && numBlockComments != 0)) {
-			numBlockComments = blockComments == null ? 0 : blockComments.size();
-			styledText.redraw();
-		}
+//		List<Token> blockComments = tokens.getTokens(0, tokens.size() - 1,
+//				JavaLexer.COMMENT);
+//		if ((blockComments != null && blockComments.size() != numBlockComments)
+//				|| (blockComments == null && numBlockComments != 0)) {
+//			numBlockComments = blockComments == null ? 0 : blockComments.size();
+//			styledText.redraw();
+//		}
 	}
 
 	protected void openFile() {
