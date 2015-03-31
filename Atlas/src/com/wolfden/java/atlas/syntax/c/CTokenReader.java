@@ -1,4 +1,4 @@
-package com.wolfden.java.atlas.syntax.java;
+package com.wolfden.java.atlas.syntax.c;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -15,24 +15,18 @@ import org.eclipse.swt.graphics.Color;
 import com.wolfden.java.atlas.syntax.StyledTokenReader;
 import com.wolfden.java.atlas.syntax.Theme;
 import com.wolfden.java.atlas.syntax.ThemeManager;
+import com.wolfden.java.atlas.syntax.java.JavaLexer;
+import com.wolfden.java.atlas.syntax.java.JavaParser;
+import com.wolfden.java.atlas.syntax.java.JavaTokenListener;
 import com.wolfden.java.atlas.syntax.java.JavaTokenListener.StylableTokenListener;
 
-public class JavaTokenReader extends StyledTokenReader {
+public class CTokenReader extends StyledTokenReader {
 	ThemeManager manager = ThemeManager.getInstance();
 	Theme theme = manager.getThemes().get(0);
 
-	private final String ACCESS_MODIFIERS = "public|private|protected";
-	private final String KEYWORDS = "abstract|continue|for|new|switch|assert|default|"
-			+ "goto|package|synchronized|boolean|do|this|break|double|implements|throw|"
-			+ "import|throws|case|enum|instanceof|return|transient|catch|extends|try|final|"
-			+ "interface|static|void|class|finally|strictfp|volatile|const|native|super|while";
-
-	private final String VARIABLES = "int|float|double|boolean|char|long|short";
+	private final String KEYWORDS = "auto|break|case|const|continue|default|do|enum|extern|for|goto|register|return|sizeof|static|struct|switch|typedef|union|volatile|while";
+	private final String VARIABLES = "void|char|short|int|long|float|double|signed|unsigned";
 	private final String OPERATORS = "[*!~+#\\-/:|&?^=><]+";
-	private final String ANNOTATIONS = "(@)((?:[a-z][a-z0-9_]*))";
-	private final String ESCAPE_SEQUENCES = "[\\](t|b|n|r|f|'|\"|\\)";
-
-	// private final String ClASS_NAME = "[A-Z](.*)";
 
 	@Override
 	public StyleRange[] getStyles(CommonTokenStream tokens,
@@ -42,35 +36,23 @@ public class JavaTokenReader extends StyledTokenReader {
 		tokens.fill();
 		for (Token token : tokens.getTokens()) {
 			switch (token.getType()) {
-			case JavaLexer.COMMENT:
-			case JavaLexer.LINE_COMMENT:
-				styleToken(token, "COMMENT");
-				break;
-			case JavaLexer.StringLiteral:
+			case CLexer.StringLiteral:
 				styleToken(token, "StringLiteral");
 				break;
 
-			case JavaLexer.IntegerLiteral:
+			case CLexer.Int:
 				styleToken(token, "IntegerLiteral");
 				break;
 
-			case JavaLexer.BooleanLiteral:
-				styleToken(token, "BooleanLiteral");
-				break;
-
-			case JavaLexer.IF:
-			case JavaLexer.ELSE:
+			case CLexer.If:
+			case CLexer.Else:
 				styleToken(token, "IfElse");
 				break;
 
 			default:
 				System.out.println("Text:" + token.getText());
-				if (token.getText().matches(ACCESS_MODIFIERS)) {
-					styleToken(token, "ACCESS_MODIFIERS");
-				} else if (token.getText().matches(VARIABLES)) {
+				if (token.getText().matches(VARIABLES)) {
 					styleToken(token, "VARIABLES");
-				} else if (token.getText().matches(ANNOTATIONS)) {
-					styleToken(token, "ANNOTATIONS", SWT.BOLD);
 				} else if (token.getText().matches(OPERATORS)) {
 					styleToken(token, "OPERATORS", SWT.BOLD);
 				} else if (token.getText().matches(KEYWORDS)) {
@@ -80,18 +62,18 @@ public class JavaTokenReader extends StyledTokenReader {
 
 		}
 
-		JavaParser parser = new JavaParser(tokens);
-		ParserRuleContext ctx = parser.compilationUnit();
+		CParser parser = new CParser(tokens);
+		ParserRuleContext ctx = parser.primaryExpression();
 		ParseTreeWalker walker = new ParseTreeWalker();
-		JavaTokenListener extractor = new JavaTokenListener(
-				new StylableTokenListener() {
-
-					@Override
-					public void onExitAnnotation(int start, int stop) {
-						styleRange(start, stop, "ANNOTATIONS");
-					}
-
-				});
+		CTokenListener extractor = new CTokenListener(
+		// new StylableTokenListener() {
+		//
+		// @Override
+		// public void onExitAnnotation(int start, int stop) {
+		// styleRange(start, stop, "ANNOTATIONS");
+		// }
+		// }
+		);
 		walker.walk(extractor, ctx); // initiate walk of tree with listener
 
 		if (curStyles != null)
@@ -121,4 +103,5 @@ public class JavaTokenReader extends StyledTokenReader {
 		Color color = theme.getHashTable().get(key);
 		addStyle(startIndex, stopIndex, color);
 	}
+
 }

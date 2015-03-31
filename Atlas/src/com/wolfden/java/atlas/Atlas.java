@@ -32,8 +32,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.wb.swt.SWTResourceManager;
 
 import com.wolfden.java.atlas.preferences.PreferenceManager;
+import com.wolfden.java.atlas.syntax.Indentable;
 import com.wolfden.java.atlas.syntax.StyledTokenReader;
 import com.wolfden.java.atlas.syntax.SyntaxManager;
+import com.wolfden.java.atlas.syntax.c.CTokenReader;
+import com.wolfden.java.atlas.syntax.java.JavaIndentationListener;
 import com.wolfden.java.atlas.syntax.java.JavaLexer;
 import com.wolfden.java.atlas.syntax.java.JavaTokenReader;
 import com.wolfden.java.atlas.syntax.plaintext.PlainTextTokenReader;
@@ -52,6 +55,7 @@ public class Atlas {
 	private StyledTokenReader styledTokenReader;
 	private PreferenceManager preferenceManager;
 	private Label lblPlainText;
+	private Indentable listener;
 
 	public Atlas() {
 		preferenceManager = PreferenceManager.getInstance();
@@ -440,6 +444,23 @@ public class Atlas {
 
 		Menu menu_5 = createSyntaxMenu(lblPlainText);
 		lblPlainText.setMenu(menu_5);
+
+		MenuItem mntmSource = new MenuItem(menu, SWT.CASCADE);
+		mntmSource.setText("Source");
+
+		Menu menu_8 = new Menu(mntmSource);
+		mntmSource.setMenu(menu_8);
+
+		MenuItem mntmFormat = new MenuItem(menu_8, SWT.NONE);
+		mntmFormat.setText("Format");
+		mntmFormat.setAccelerator(SelectionHelper.SWT_FORMAT_CODE);
+		mntmFormat.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				super.widgetSelected(e);
+				formatCode(styledText);
+			}
+		});
 		// mntmPlainText.addSelectionListener(new SelectionAdapter() {
 		// @Override
 		// public void widgetSelected(SelectionEvent e) {
@@ -488,11 +509,7 @@ public class Atlas {
 	 */
 	protected void parseSyntax(LineStyleEvent event) {
 		String language = preferenceManager.getPreference("language");
-		if (language.equals("Java")) {
-			styledTokenReader = new JavaTokenReader();
-		} else {
-			styledTokenReader = new PlainTextTokenReader();
-		}
+		styledTokenReader = getTokenReader(language);
 		ANTLRInputStream input = new ANTLRInputStream(styledText.getText());
 		JavaLexer lexer = new JavaLexer(input);
 		lexer.removeErrorListeners();
@@ -500,14 +517,17 @@ public class Atlas {
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		event.styles = styledTokenReader.getStyles(tokens, event.styles);
 
-		// List<Token> blockComments = tokens.getTokens(0, tokens.size() - 1,
-		// JavaLexer.COMMENT);
-		// if ((blockComments != null && blockComments.size() !=
-		// numBlockComments)
-		// || (blockComments == null && numBlockComments != 0)) {
-		// numBlockComments = blockComments == null ? 0 : blockComments.size();
-		// styledText.redraw();
-		// }
+	}
+
+	public StyledTokenReader getTokenReader(String language) {
+		switch (language) {
+		case "Java":
+			return new JavaTokenReader();
+		case "C":
+			return new CTokenReader();
+		default:
+			return new PlainTextTokenReader();
+		}
 	}
 
 	protected void openFile() {
@@ -523,6 +543,14 @@ public class Atlas {
 				ErrorUtils.showErrorMessageBox(e, shlAtlas);
 				e.printStackTrace();
 			}
+		}
+	}
+
+	public void formatCode(StyledText text) {
+		String language = preferenceManager.getPreference("language");
+		if (language.equals("Java")) {
+			listener = new JavaIndentationListener();
+			listener.updateIndentation(text);
 		}
 	}
 

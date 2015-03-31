@@ -15,6 +15,7 @@
 	<!-- int|float|double|boolean|char|long|short -->
 	<!-- <style name="VARIABLES" color="F55D79"/> -->
 	<style name="VARIABLES" color="6699CC"/>
+	<style name="COMMENT" color="6D6D6D"/>
 	
 	<!-- @override|@param|... -->
 	<style name="ANNOTATIONS" color="A09688"/>

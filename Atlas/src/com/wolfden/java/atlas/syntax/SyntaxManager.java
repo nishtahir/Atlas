@@ -29,16 +29,22 @@ public class SyntaxManager {
 	}
 
 	/**
-	 * Holds the list of supported languages They will also be used as keys
-	 * 
+	 * Holds a list of supported languages They will also be used as keys
 	 * @author Nish
 	 */
 	public interface Languages {
+		public static final String C = "C";
+		public static final String CPP = "C++";
 		public static final String JAVA = "Java";
+		public static final String JAVA_SCRIPT = "Javascript";
 		public static final String PLAIN_TEXT = "Plain text";
 	}
 
-	public static final String[] SUPPORTED_LANGUAGES = { Languages.JAVA,
-			Languages.PLAIN_TEXT };
+	public static final String[] SUPPORTED_LANGUAGES = { 
+		Languages.C, 
+		Languages.CPP, 
+		Languages.JAVA,
+		Languages.JAVA_SCRIPT,
+		Languages.PLAIN_TEXT };
 
 }

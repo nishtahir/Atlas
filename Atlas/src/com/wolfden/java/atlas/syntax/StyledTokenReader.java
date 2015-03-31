@@ -9,7 +9,6 @@ import org.eclipse.swt.graphics.Color;
 
 public abstract class StyledTokenReader {
 	protected ArrayList<StyleRange> styles = new ArrayList<StyleRange>();
-
 	public abstract StyleRange[] getStyles(CommonTokenStream tokens, StyleRange[] styleRange);
 
 	/**
