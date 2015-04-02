@@ -485,7 +485,7 @@ public class Atlas {
 	}
 
 	private Menu populateSyntaxMenu(Menu syntaxMenu) {
-		for (String language : SyntaxManager.SUPPORTED_LANGUAGES) {
+		for (final String language : SyntaxManager.SUPPORTED_LANGUAGES) {
 			MenuItem item = new MenuItem(syntaxMenu, SWT.NONE);
 			item.addSelectionListener(new SelectionAdapter() {
 				@Override
