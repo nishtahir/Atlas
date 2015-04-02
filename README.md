@@ -13,6 +13,10 @@ Atlas is a decent text editor application with syntax highlighting.
 * Eclipse SWT
 * ANTLR 4.5
 
+### Tools ###
+
+* ANTLR IDE (Eclipse Plugin)
+
 ### Contribution guidelines ###
 
 * All contributions are welcome
