@@ -433,14 +433,16 @@ public class Atlas {
 		composite.setLayout(gl_composite);
 
 		lblLineCount = new Label(composite, SWT.SHADOW_IN);
+		lblLineCount.setBackground(SWTResourceManager.getColor(105, 105, 105));
 		lblLineCount.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true,
 				false, 1, 1));
-		lblLineCount.setForeground(SWTResourceManager.getColor(245, 245, 245));
+		lblLineCount.setForeground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		lblLineCount.setText("Lines: 0, Characters: 0");
 
 		lblPlainText = new Label(composite, SWT.NONE);
 		lblPlainText.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		lblPlainText.setText(preferenceManager.getPreference("language"));
+		lblPlainText.setBackground(SWTResourceManager.getColor(105, 105, 105));
 
 		Menu menu_5 = createSyntaxMenu(lblPlainText);
 		lblPlainText.setMenu(menu_5);
