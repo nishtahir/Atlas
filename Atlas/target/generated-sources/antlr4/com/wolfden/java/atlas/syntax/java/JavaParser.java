@@ -135,12 +135,6 @@ public class JavaParser extends Parser {
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 	public static class CompilationUnitContext extends ParserRuleContext {
-		public TypeDeclarationContext typeDeclaration(int i) {
-			return getRuleContext(TypeDeclarationContext.class,i);
-		}
-		public ImportDeclarationContext importDeclaration(int i) {
-			return getRuleContext(ImportDeclarationContext.class,i);
-		}
 		public List<ImportDeclarationContext> importDeclaration() {
 			return getRuleContexts(ImportDeclarationContext.class);
 		}
@@ -148,8 +142,14 @@ public class JavaParser extends Parser {
 		public PackageDeclarationContext packageDeclaration() {
 			return getRuleContext(PackageDeclarationContext.class,0);
 		}
+		public ImportDeclarationContext importDeclaration(int i) {
+			return getRuleContext(ImportDeclarationContext.class,i);
+		}
 		public List<TypeDeclarationContext> typeDeclaration() {
 			return getRuleContexts(TypeDeclarationContext.class);
+		}
+		public TypeDeclarationContext typeDeclaration(int i) {
+			return getRuleContext(TypeDeclarationContext.class,i);
 		}
 		public CompilationUnitContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -221,14 +221,14 @@ public class JavaParser extends Parser {
 	}
 
 	public static class PackageDeclarationContext extends ParserRuleContext {
-		public List<AnnotationContext> annotation() {
-			return getRuleContexts(AnnotationContext.class);
+		public AnnotationContext annotation(int i) {
+			return getRuleContext(AnnotationContext.class,i);
 		}
 		public QualifiedNameContext qualifiedName() {
 			return getRuleContext(QualifiedNameContext.class,0);
 		}
-		public AnnotationContext annotation(int i) {
-			return getRuleContext(AnnotationContext.class,i);
+		public List<AnnotationContext> annotation() {
+			return getRuleContexts(AnnotationContext.class);
 		}
 		public PackageDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -339,23 +339,23 @@ public class JavaParser extends Parser {
 	}
 
 	public static class TypeDeclarationContext extends ParserRuleContext {
+		public InterfaceDeclarationContext interfaceDeclaration() {
+			return getRuleContext(InterfaceDeclarationContext.class,0);
+		}
+		public AnnotationTypeDeclarationContext annotationTypeDeclaration() {
+			return getRuleContext(AnnotationTypeDeclarationContext.class,0);
+		}
 		public ClassOrInterfaceModifierContext classOrInterfaceModifier(int i) {
 			return getRuleContext(ClassOrInterfaceModifierContext.class,i);
 		}
 		public EnumDeclarationContext enumDeclaration() {
 			return getRuleContext(EnumDeclarationContext.class,0);
 		}
-		public ClassDeclarationContext classDeclaration() {
-			return getRuleContext(ClassDeclarationContext.class,0);
-		}
-		public AnnotationTypeDeclarationContext annotationTypeDeclaration() {
-			return getRuleContext(AnnotationTypeDeclarationContext.class,0);
-		}
 		public List<ClassOrInterfaceModifierContext> classOrInterfaceModifier() {
 			return getRuleContexts(ClassOrInterfaceModifierContext.class);
 		}
-		public InterfaceDeclarationContext interfaceDeclaration() {
-			return getRuleContext(InterfaceDeclarationContext.class,0);
+		public ClassDeclarationContext classDeclaration() {
+			return getRuleContext(ClassDeclarationContext.class,0);
 		}
 		public TypeDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -658,16 +658,16 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ClassDeclarationContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
+		public TypeParametersContext typeParameters() {
+			return getRuleContext(TypeParametersContext.class,0);
+		}
 		public ClassBodyContext classBody() {
 			return getRuleContext(ClassBodyContext.class,0);
 		}
 		public TypeListContext typeList() {
 			return getRuleContext(TypeListContext.class,0);
 		}
-		public TypeParametersContext typeParameters() {
-			return getRuleContext(TypeParametersContext.class,0);
-		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
 		}
@@ -898,16 +898,16 @@ public class JavaParser extends Parser {
 	}
 
 	public static class EnumDeclarationContext extends ParserRuleContext {
-		public EnumBodyDeclarationsContext enumBodyDeclarations() {
-			return getRuleContext(EnumBodyDeclarationsContext.class,0);
-		}
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
+		public TerminalNode ENUM() { return getToken(JavaParser.ENUM, 0); }
 		public TypeListContext typeList() {
 			return getRuleContext(TypeListContext.class,0);
 		}
-		public TerminalNode ENUM() { return getToken(JavaParser.ENUM, 0); }
 		public EnumConstantsContext enumConstants() {
 			return getRuleContext(EnumConstantsContext.class,0);
+		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
+		public EnumBodyDeclarationsContext enumBodyDeclarations() {
+			return getRuleContext(EnumBodyDeclarationsContext.class,0);
 		}
 		public EnumDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1039,15 +1039,15 @@ public class JavaParser extends Parser {
 	}
 
 	public static class EnumConstantContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
-		public List<AnnotationContext> annotation() {
-			return getRuleContexts(AnnotationContext.class);
+		public AnnotationContext annotation(int i) {
+			return getRuleContext(AnnotationContext.class,i);
 		}
 		public ClassBodyContext classBody() {
 			return getRuleContext(ClassBodyContext.class,0);
 		}
-		public AnnotationContext annotation(int i) {
-			return getRuleContext(AnnotationContext.class,i);
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
+		public List<AnnotationContext> annotation() {
+			return getRuleContexts(AnnotationContext.class);
 		}
 		public ArgumentsContext arguments() {
 			return getRuleContext(ArgumentsContext.class,0);
@@ -1117,11 +1117,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class EnumBodyDeclarationsContext extends ParserRuleContext {
-		public List<ClassBodyDeclarationContext> classBodyDeclaration() {
-			return getRuleContexts(ClassBodyDeclarationContext.class);
-		}
 		public ClassBodyDeclarationContext classBodyDeclaration(int i) {
 			return getRuleContext(ClassBodyDeclarationContext.class,i);
+		}
+		public List<ClassBodyDeclarationContext> classBodyDeclaration() {
+			return getRuleContexts(ClassBodyDeclarationContext.class);
 		}
 		public EnumBodyDeclarationsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1172,15 +1172,15 @@ public class JavaParser extends Parser {
 	}
 
 	public static class InterfaceDeclarationContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
-		public InterfaceBodyContext interfaceBody() {
-			return getRuleContext(InterfaceBodyContext.class,0);
+		public TypeParametersContext typeParameters() {
+			return getRuleContext(TypeParametersContext.class,0);
 		}
 		public TypeListContext typeList() {
 			return getRuleContext(TypeListContext.class,0);
 		}
-		public TypeParametersContext typeParameters() {
-			return getRuleContext(TypeParametersContext.class,0);
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
+		public InterfaceBodyContext interfaceBody() {
+			return getRuleContext(InterfaceBodyContext.class,0);
 		}
 		public InterfaceDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1293,11 +1293,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ClassBodyContext extends ParserRuleContext {
-		public List<ClassBodyDeclarationContext> classBodyDeclaration() {
-			return getRuleContexts(ClassBodyDeclarationContext.class);
-		}
 		public ClassBodyDeclarationContext classBodyDeclaration(int i) {
 			return getRuleContext(ClassBodyDeclarationContext.class,i);
+		}
+		public List<ClassBodyDeclarationContext> classBodyDeclaration() {
+			return getRuleContexts(ClassBodyDeclarationContext.class);
 		}
 		public ClassBodyContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1349,11 +1349,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class InterfaceBodyContext extends ParserRuleContext {
-		public List<InterfaceBodyDeclarationContext> interfaceBodyDeclaration() {
-			return getRuleContexts(InterfaceBodyDeclarationContext.class);
-		}
 		public InterfaceBodyDeclarationContext interfaceBodyDeclaration(int i) {
 			return getRuleContext(InterfaceBodyDeclarationContext.class,i);
+		}
+		public List<InterfaceBodyDeclarationContext> interfaceBodyDeclaration() {
+			return getRuleContexts(InterfaceBodyDeclarationContext.class);
 		}
 		public InterfaceBodyContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1405,17 +1405,17 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ClassBodyDeclarationContext extends ParserRuleContext {
-		public List<ModifierContext> modifier() {
-			return getRuleContexts(ModifierContext.class);
-		}
 		public MemberDeclarationContext memberDeclaration() {
 			return getRuleContext(MemberDeclarationContext.class,0);
 		}
-		public ModifierContext modifier(int i) {
-			return getRuleContext(ModifierContext.class,i);
+		public List<ModifierContext> modifier() {
+			return getRuleContexts(ModifierContext.class);
 		}
 		public BlockContext block() {
 			return getRuleContext(BlockContext.class,0);
+		}
+		public ModifierContext modifier(int i) {
+			return getRuleContext(ModifierContext.class,i);
 		}
 		public ClassBodyDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1494,32 +1494,32 @@ public class JavaParser extends Parser {
 	}
 
 	public static class MemberDeclarationContext extends ParserRuleContext {
-		public GenericMethodDeclarationContext genericMethodDeclaration() {
-			return getRuleContext(GenericMethodDeclarationContext.class,0);
-		}
-		public MethodDeclarationContext methodDeclaration() {
-			return getRuleContext(MethodDeclarationContext.class,0);
-		}
-		public EnumDeclarationContext enumDeclaration() {
-			return getRuleContext(EnumDeclarationContext.class,0);
-		}
-		public ClassDeclarationContext classDeclaration() {
-			return getRuleContext(ClassDeclarationContext.class,0);
+		public InterfaceDeclarationContext interfaceDeclaration() {
+			return getRuleContext(InterfaceDeclarationContext.class,0);
 		}
 		public AnnotationTypeDeclarationContext annotationTypeDeclaration() {
 			return getRuleContext(AnnotationTypeDeclarationContext.class,0);
-		}
-		public GenericConstructorDeclarationContext genericConstructorDeclaration() {
-			return getRuleContext(GenericConstructorDeclarationContext.class,0);
-		}
-		public InterfaceDeclarationContext interfaceDeclaration() {
-			return getRuleContext(InterfaceDeclarationContext.class,0);
 		}
 		public ConstructorDeclarationContext constructorDeclaration() {
 			return getRuleContext(ConstructorDeclarationContext.class,0);
 		}
 		public FieldDeclarationContext fieldDeclaration() {
 			return getRuleContext(FieldDeclarationContext.class,0);
+		}
+		public EnumDeclarationContext enumDeclaration() {
+			return getRuleContext(EnumDeclarationContext.class,0);
+		}
+		public GenericMethodDeclarationContext genericMethodDeclaration() {
+			return getRuleContext(GenericMethodDeclarationContext.class,0);
+		}
+		public MethodDeclarationContext methodDeclaration() {
+			return getRuleContext(MethodDeclarationContext.class,0);
+		}
+		public GenericConstructorDeclarationContext genericConstructorDeclaration() {
+			return getRuleContext(GenericConstructorDeclarationContext.class,0);
+		}
+		public ClassDeclarationContext classDeclaration() {
+			return getRuleContext(ClassDeclarationContext.class,0);
 		}
 		public MemberDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1609,18 +1609,18 @@ public class JavaParser extends Parser {
 	}
 
 	public static class MethodDeclarationContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public MethodBodyContext methodBody() {
 			return getRuleContext(MethodBodyContext.class,0);
-		}
-		public QualifiedNameListContext qualifiedNameList() {
-			return getRuleContext(QualifiedNameListContext.class,0);
 		}
 		public FormalParametersContext formalParameters() {
 			return getRuleContext(FormalParametersContext.class,0);
 		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
+		}
+		public QualifiedNameListContext qualifiedNameList() {
+			return getRuleContext(QualifiedNameListContext.class,0);
 		}
 		public MethodDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1720,11 +1720,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class GenericMethodDeclarationContext extends ParserRuleContext {
-		public MethodDeclarationContext methodDeclaration() {
-			return getRuleContext(MethodDeclarationContext.class,0);
-		}
 		public TypeParametersContext typeParameters() {
 			return getRuleContext(TypeParametersContext.class,0);
+		}
+		public MethodDeclarationContext methodDeclaration() {
+			return getRuleContext(MethodDeclarationContext.class,0);
 		}
 		public GenericMethodDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1762,15 +1762,15 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ConstructorDeclarationContext extends ParserRuleContext {
+		public FormalParametersContext formalParameters() {
+			return getRuleContext(FormalParametersContext.class,0);
+		}
 		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public ConstructorBodyContext constructorBody() {
 			return getRuleContext(ConstructorBodyContext.class,0);
 		}
 		public QualifiedNameListContext qualifiedNameList() {
 			return getRuleContext(QualifiedNameListContext.class,0);
-		}
-		public FormalParametersContext formalParameters() {
-			return getRuleContext(FormalParametersContext.class,0);
 		}
 		public ConstructorDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1904,14 +1904,14 @@ public class JavaParser extends Parser {
 	}
 
 	public static class InterfaceBodyDeclarationContext extends ParserRuleContext {
+		public InterfaceMemberDeclarationContext interfaceMemberDeclaration() {
+			return getRuleContext(InterfaceMemberDeclarationContext.class,0);
+		}
 		public List<ModifierContext> modifier() {
 			return getRuleContexts(ModifierContext.class);
 		}
 		public ModifierContext modifier(int i) {
 			return getRuleContext(ModifierContext.class,i);
-		}
-		public InterfaceMemberDeclarationContext interfaceMemberDeclaration() {
-			return getRuleContext(InterfaceMemberDeclarationContext.class,0);
 		}
 		public InterfaceBodyDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2002,26 +2002,26 @@ public class JavaParser extends Parser {
 	}
 
 	public static class InterfaceMemberDeclarationContext extends ParserRuleContext {
-		public EnumDeclarationContext enumDeclaration() {
-			return getRuleContext(EnumDeclarationContext.class,0);
-		}
-		public ClassDeclarationContext classDeclaration() {
-			return getRuleContext(ClassDeclarationContext.class,0);
-		}
 		public GenericInterfaceMethodDeclarationContext genericInterfaceMethodDeclaration() {
 			return getRuleContext(GenericInterfaceMethodDeclarationContext.class,0);
 		}
-		public AnnotationTypeDeclarationContext annotationTypeDeclaration() {
-			return getRuleContext(AnnotationTypeDeclarationContext.class,0);
+		public InterfaceMethodDeclarationContext interfaceMethodDeclaration() {
+			return getRuleContext(InterfaceMethodDeclarationContext.class,0);
 		}
 		public InterfaceDeclarationContext interfaceDeclaration() {
 			return getRuleContext(InterfaceDeclarationContext.class,0);
 		}
+		public AnnotationTypeDeclarationContext annotationTypeDeclaration() {
+			return getRuleContext(AnnotationTypeDeclarationContext.class,0);
+		}
+		public EnumDeclarationContext enumDeclaration() {
+			return getRuleContext(EnumDeclarationContext.class,0);
+		}
 		public ConstDeclarationContext constDeclaration() {
 			return getRuleContext(ConstDeclarationContext.class,0);
 		}
-		public InterfaceMethodDeclarationContext interfaceMethodDeclaration() {
-			return getRuleContext(InterfaceMethodDeclarationContext.class,0);
+		public ClassDeclarationContext classDeclaration() {
+			return getRuleContext(ClassDeclarationContext.class,0);
 		}
 		public InterfaceMemberDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2099,11 +2099,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ConstDeclarationContext extends ParserRuleContext {
-		public ConstantDeclaratorContext constantDeclarator(int i) {
-			return getRuleContext(ConstantDeclaratorContext.class,i);
-		}
 		public List<ConstantDeclaratorContext> constantDeclarator() {
 			return getRuleContexts(ConstantDeclaratorContext.class);
+		}
+		public ConstantDeclaratorContext constantDeclarator(int i) {
+			return getRuleContext(ConstantDeclaratorContext.class,i);
 		}
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
@@ -2216,15 +2216,15 @@ public class JavaParser extends Parser {
 	}
 
 	public static class InterfaceMethodDeclarationContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
-		public QualifiedNameListContext qualifiedNameList() {
-			return getRuleContext(QualifiedNameListContext.class,0);
-		}
 		public FormalParametersContext formalParameters() {
 			return getRuleContext(FormalParametersContext.class,0);
 		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
+		}
+		public QualifiedNameListContext qualifiedNameList() {
+			return getRuleContext(QualifiedNameListContext.class,0);
 		}
 		public InterfaceMethodDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2310,11 +2310,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class GenericInterfaceMethodDeclarationContext extends ParserRuleContext {
-		public TypeParametersContext typeParameters() {
-			return getRuleContext(TypeParametersContext.class,0);
-		}
 		public InterfaceMethodDeclarationContext interfaceMethodDeclaration() {
 			return getRuleContext(InterfaceMethodDeclarationContext.class,0);
+		}
+		public TypeParametersContext typeParameters() {
+			return getRuleContext(TypeParametersContext.class,0);
 		}
 		public GenericInterfaceMethodDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2352,11 +2352,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class VariableDeclaratorsContext extends ParserRuleContext {
-		public List<VariableDeclaratorContext> variableDeclarator() {
-			return getRuleContexts(VariableDeclaratorContext.class);
-		}
 		public VariableDeclaratorContext variableDeclarator(int i) {
 			return getRuleContext(VariableDeclaratorContext.class,i);
+		}
+		public List<VariableDeclaratorContext> variableDeclarator() {
+			return getRuleContexts(VariableDeclaratorContext.class);
 		}
 		public VariableDeclaratorsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2408,11 +2408,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class VariableDeclaratorContext extends ParserRuleContext {
-		public VariableInitializerContext variableInitializer() {
-			return getRuleContext(VariableInitializerContext.class,0);
-		}
 		public VariableDeclaratorIdContext variableDeclaratorId() {
 			return getRuleContext(VariableDeclaratorIdContext.class,0);
+		}
+		public VariableInitializerContext variableInitializer() {
+			return getRuleContext(VariableInitializerContext.class,0);
 		}
 		public VariableDeclaratorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2510,11 +2510,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class VariableInitializerContext extends ParserRuleContext {
-		public ArrayInitializerContext arrayInitializer() {
-			return getRuleContext(ArrayInitializerContext.class,0);
-		}
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
+		}
+		public ArrayInitializerContext arrayInitializer() {
+			return getRuleContext(ArrayInitializerContext.class,0);
 		}
 		public VariableInitializerContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2590,11 +2590,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ArrayInitializerContext extends ParserRuleContext {
-		public List<VariableInitializerContext> variableInitializer() {
-			return getRuleContexts(VariableInitializerContext.class);
-		}
 		public VariableInitializerContext variableInitializer(int i) {
 			return getRuleContext(VariableInitializerContext.class,i);
+		}
+		public List<VariableInitializerContext> variableInitializer() {
+			return getRuleContexts(VariableInitializerContext.class);
 		}
 		public ArrayInitializerContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -2796,15 +2796,15 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ClassOrInterfaceTypeContext extends ParserRuleContext {
-		public List<TypeArgumentsContext> typeArguments() {
-			return getRuleContexts(TypeArgumentsContext.class);
+		public TypeArgumentsContext typeArguments(int i) {
+			return getRuleContext(TypeArgumentsContext.class,i);
 		}
-		public List<TerminalNode> Identifier() { return getTokens(JavaParser.Identifier); }
 		public TerminalNode Identifier(int i) {
 			return getToken(JavaParser.Identifier, i);
 		}
-		public TypeArgumentsContext typeArguments(int i) {
-			return getRuleContext(TypeArgumentsContext.class,i);
+		public List<TerminalNode> Identifier() { return getTokens(JavaParser.Identifier); }
+		public List<TypeArgumentsContext> typeArguments() {
+			return getRuleContexts(TypeArgumentsContext.class);
 		}
 		public ClassOrInterfaceTypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3047,11 +3047,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class QualifiedNameListContext extends ParserRuleContext {
-		public List<QualifiedNameContext> qualifiedName() {
-			return getRuleContexts(QualifiedNameContext.class);
-		}
 		public QualifiedNameContext qualifiedName(int i) {
 			return getRuleContext(QualifiedNameContext.class,i);
+		}
+		public List<QualifiedNameContext> qualifiedName() {
+			return getRuleContexts(QualifiedNameContext.class);
 		}
 		public QualifiedNameListContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3233,17 +3233,17 @@ public class JavaParser extends Parser {
 	}
 
 	public static class FormalParameterContext extends ParserRuleContext {
-		public VariableModifierContext variableModifier(int i) {
-			return getRuleContext(VariableModifierContext.class,i);
-		}
 		public List<VariableModifierContext> variableModifier() {
 			return getRuleContexts(VariableModifierContext.class);
 		}
-		public VariableDeclaratorIdContext variableDeclaratorId() {
-			return getRuleContext(VariableDeclaratorIdContext.class,0);
+		public VariableModifierContext variableModifier(int i) {
+			return getRuleContext(VariableModifierContext.class,i);
 		}
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
+		}
+		public VariableDeclaratorIdContext variableDeclaratorId() {
+			return getRuleContext(VariableDeclaratorIdContext.class,0);
 		}
 		public FormalParameterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3295,17 +3295,17 @@ public class JavaParser extends Parser {
 	}
 
 	public static class LastFormalParameterContext extends ParserRuleContext {
-		public VariableModifierContext variableModifier(int i) {
-			return getRuleContext(VariableModifierContext.class,i);
-		}
 		public List<VariableModifierContext> variableModifier() {
 			return getRuleContexts(VariableModifierContext.class);
 		}
-		public VariableDeclaratorIdContext variableDeclaratorId() {
-			return getRuleContext(VariableDeclaratorIdContext.class,0);
+		public VariableModifierContext variableModifier(int i) {
+			return getRuleContext(VariableModifierContext.class,i);
 		}
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
+		}
+		public VariableDeclaratorIdContext variableDeclaratorId() {
+			return getRuleContext(VariableDeclaratorIdContext.class,0);
 		}
 		public LastFormalParameterContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3434,10 +3434,10 @@ public class JavaParser extends Parser {
 	}
 
 	public static class QualifiedNameContext extends ParserRuleContext {
-		public List<TerminalNode> Identifier() { return getTokens(JavaParser.Identifier); }
 		public TerminalNode Identifier(int i) {
 			return getToken(JavaParser.Identifier, i);
 		}
+		public List<TerminalNode> Identifier() { return getTokens(JavaParser.Identifier); }
 		public QualifiedNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3490,11 +3490,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class LiteralContext extends ParserRuleContext {
-		public TerminalNode StringLiteral() { return getToken(JavaParser.StringLiteral, 0); }
+		public TerminalNode CharacterLiteral() { return getToken(JavaParser.CharacterLiteral, 0); }
 		public TerminalNode IntegerLiteral() { return getToken(JavaParser.IntegerLiteral, 0); }
+		public TerminalNode StringLiteral() { return getToken(JavaParser.StringLiteral, 0); }
 		public TerminalNode FloatingPointLiteral() { return getToken(JavaParser.FloatingPointLiteral, 0); }
 		public TerminalNode BooleanLiteral() { return getToken(JavaParser.BooleanLiteral, 0); }
-		public TerminalNode CharacterLiteral() { return getToken(JavaParser.CharacterLiteral, 0); }
 		public LiteralContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3536,14 +3536,14 @@ public class JavaParser extends Parser {
 	}
 
 	public static class AnnotationContext extends ParserRuleContext {
+		public ElementValueContext elementValue() {
+			return getRuleContext(ElementValueContext.class,0);
+		}
 		public ElementValuePairsContext elementValuePairs() {
 			return getRuleContext(ElementValuePairsContext.class,0);
 		}
 		public AnnotationNameContext annotationName() {
 			return getRuleContext(AnnotationNameContext.class,0);
-		}
-		public ElementValueContext elementValue() {
-			return getRuleContext(ElementValueContext.class,0);
 		}
 		public AnnotationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3642,11 +3642,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ElementValuePairsContext extends ParserRuleContext {
-		public ElementValuePairContext elementValuePair(int i) {
-			return getRuleContext(ElementValuePairContext.class,i);
-		}
 		public List<ElementValuePairContext> elementValuePair() {
 			return getRuleContexts(ElementValuePairContext.class);
+		}
+		public ElementValuePairContext elementValuePair(int i) {
+			return getRuleContext(ElementValuePairContext.class,i);
 		}
 		public ElementValuePairsContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -3698,10 +3698,10 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ElementValuePairContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public ElementValueContext elementValue() {
 			return getRuleContext(ElementValueContext.class,0);
 		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public ElementValuePairContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -3904,10 +3904,10 @@ public class JavaParser extends Parser {
 	}
 
 	public static class AnnotationTypeDeclarationContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public AnnotationTypeBodyContext annotationTypeBody() {
 			return getRuleContext(AnnotationTypeBodyContext.class,0);
 		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public AnnotationTypeDeclarationContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4098,23 +4098,23 @@ public class JavaParser extends Parser {
 	}
 
 	public static class AnnotationTypeElementRestContext extends ParserRuleContext {
+		public InterfaceDeclarationContext interfaceDeclaration() {
+			return getRuleContext(InterfaceDeclarationContext.class,0);
+		}
+		public AnnotationTypeDeclarationContext annotationTypeDeclaration() {
+			return getRuleContext(AnnotationTypeDeclarationContext.class,0);
+		}
+		public AnnotationMethodOrConstantRestContext annotationMethodOrConstantRest() {
+			return getRuleContext(AnnotationMethodOrConstantRestContext.class,0);
+		}
+		public TypeContext type() {
+			return getRuleContext(TypeContext.class,0);
+		}
 		public EnumDeclarationContext enumDeclaration() {
 			return getRuleContext(EnumDeclarationContext.class,0);
 		}
 		public ClassDeclarationContext classDeclaration() {
 			return getRuleContext(ClassDeclarationContext.class,0);
-		}
-		public AnnotationMethodOrConstantRestContext annotationMethodOrConstantRest() {
-			return getRuleContext(AnnotationMethodOrConstantRestContext.class,0);
-		}
-		public AnnotationTypeDeclarationContext annotationTypeDeclaration() {
-			return getRuleContext(AnnotationTypeDeclarationContext.class,0);
-		}
-		public InterfaceDeclarationContext interfaceDeclaration() {
-			return getRuleContext(InterfaceDeclarationContext.class,0);
-		}
-		public TypeContext type() {
-			return getRuleContext(TypeContext.class,0);
 		}
 		public AnnotationTypeElementRestContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4224,11 +4224,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class AnnotationMethodOrConstantRestContext extends ParserRuleContext {
-		public AnnotationMethodRestContext annotationMethodRest() {
-			return getRuleContext(AnnotationMethodRestContext.class,0);
-		}
 		public AnnotationConstantRestContext annotationConstantRest() {
 			return getRuleContext(AnnotationConstantRestContext.class,0);
+		}
+		public AnnotationMethodRestContext annotationMethodRest() {
+			return getRuleContext(AnnotationMethodRestContext.class,0);
 		}
 		public AnnotationMethodOrConstantRestContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -4276,10 +4276,10 @@ public class JavaParser extends Parser {
 	}
 
 	public static class AnnotationMethodRestContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public DefaultValueContext defaultValue() {
 			return getRuleContext(DefaultValueContext.class,0);
 		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public AnnotationMethodRestContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4459,11 +4459,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class BlockStatementContext extends ParserRuleContext {
-		public TypeDeclarationContext typeDeclaration() {
-			return getRuleContext(TypeDeclarationContext.class,0);
-		}
 		public StatementContext statement() {
 			return getRuleContext(StatementContext.class,0);
+		}
+		public TypeDeclarationContext typeDeclaration() {
+			return getRuleContext(TypeDeclarationContext.class,0);
 		}
 		public LocalVariableDeclarationStatementContext localVariableDeclarationStatement() {
 			return getRuleContext(LocalVariableDeclarationStatementContext.class,0);
@@ -4559,14 +4559,14 @@ public class JavaParser extends Parser {
 	}
 
 	public static class LocalVariableDeclarationContext extends ParserRuleContext {
-		public VariableModifierContext variableModifier(int i) {
-			return getRuleContext(VariableModifierContext.class,i);
-		}
 		public List<VariableModifierContext> variableModifier() {
 			return getRuleContexts(VariableModifierContext.class);
 		}
 		public VariableDeclaratorsContext variableDeclarators() {
 			return getRuleContext(VariableDeclaratorsContext.class,0);
+		}
+		public VariableModifierContext variableModifier(int i) {
+			return getRuleContext(VariableModifierContext.class,i);
 		}
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
@@ -4621,56 +4621,56 @@ public class JavaParser extends Parser {
 	}
 
 	public static class StatementContext extends ParserRuleContext {
-		public ExpressionContext expression(int i) {
-			return getRuleContext(ExpressionContext.class,i);
-		}
-		public StatementExpressionContext statementExpression() {
-			return getRuleContext(StatementExpressionContext.class,0);
-		}
-		public StatementContext statement(int i) {
-			return getRuleContext(StatementContext.class,i);
-		}
-		public List<SwitchLabelContext> switchLabel() {
-			return getRuleContexts(SwitchLabelContext.class);
-		}
-		public List<SwitchBlockStatementGroupContext> switchBlockStatementGroup() {
-			return getRuleContexts(SwitchBlockStatementGroupContext.class);
-		}
-		public ParExpressionContext parExpression() {
-			return getRuleContext(ParExpressionContext.class,0);
-		}
-		public List<CatchClauseContext> catchClause() {
-			return getRuleContexts(CatchClauseContext.class);
-		}
-		public CatchClauseContext catchClause(int i) {
-			return getRuleContext(CatchClauseContext.class,i);
-		}
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
-		public FinallyBlockContext finallyBlock() {
-			return getRuleContext(FinallyBlockContext.class,0);
-		}
-		public SwitchBlockStatementGroupContext switchBlockStatementGroup(int i) {
-			return getRuleContext(SwitchBlockStatementGroupContext.class,i);
-		}
-		public ForControlContext forControl() {
-			return getRuleContext(ForControlContext.class,0);
-		}
-		public TerminalNode ASSERT() { return getToken(JavaParser.ASSERT, 0); }
-		public ResourceSpecificationContext resourceSpecification() {
-			return getRuleContext(ResourceSpecificationContext.class,0);
-		}
 		public List<StatementContext> statement() {
 			return getRuleContexts(StatementContext.class);
-		}
-		public BlockContext block() {
-			return getRuleContext(BlockContext.class,0);
-		}
-		public List<ExpressionContext> expression() {
-			return getRuleContexts(ExpressionContext.class);
 		}
 		public SwitchLabelContext switchLabel(int i) {
 			return getRuleContext(SwitchLabelContext.class,i);
 		}
+		public ForControlContext forControl() {
+			return getRuleContext(ForControlContext.class,0);
+		}
+		public List<SwitchLabelContext> switchLabel() {
+			return getRuleContexts(SwitchLabelContext.class);
+		}
+		public ParExpressionContext parExpression() {
+			return getRuleContext(ParExpressionContext.class,0);
+		}
+		public ResourceSpecificationContext resourceSpecification() {
+			return getRuleContext(ResourceSpecificationContext.class,0);
+		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
+		public List<ExpressionContext> expression() {
+			return getRuleContexts(ExpressionContext.class);
+		}
+		public CatchClauseContext catchClause(int i) {
+			return getRuleContext(CatchClauseContext.class,i);
+		}
+		public FinallyBlockContext finallyBlock() {
+			return getRuleContext(FinallyBlockContext.class,0);
+		}
+		public ExpressionContext expression(int i) {
+			return getRuleContext(ExpressionContext.class,i);
+		}
+		public SwitchBlockStatementGroupContext switchBlockStatementGroup(int i) {
+			return getRuleContext(SwitchBlockStatementGroupContext.class,i);
+		}
+		public StatementExpressionContext statementExpression() {
+			return getRuleContext(StatementExpressionContext.class,0);
+		}
+		public List<CatchClauseContext> catchClause() {
+			return getRuleContexts(CatchClauseContext.class);
+		}
+		public BlockContext block() {
+			return getRuleContext(BlockContext.class,0);
+		}
+		public StatementContext statement(int i) {
+			return getRuleContext(StatementContext.class,i);
+		}
+		public List<SwitchBlockStatementGroupContext> switchBlockStatementGroup() {
+			return getRuleContexts(SwitchBlockStatementGroupContext.class);
+		}
+		public TerminalNode ASSERT() { return getToken(JavaParser.ASSERT, 0); }
 		public StatementContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -4965,18 +4965,18 @@ public class JavaParser extends Parser {
 	}
 
 	public static class CatchClauseContext extends ParserRuleContext {
-		public CatchTypeContext catchType() {
-			return getRuleContext(CatchTypeContext.class,0);
-		}
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
-		public VariableModifierContext variableModifier(int i) {
-			return getRuleContext(VariableModifierContext.class,i);
-		}
 		public List<VariableModifierContext> variableModifier() {
 			return getRuleContexts(VariableModifierContext.class);
 		}
+		public VariableModifierContext variableModifier(int i) {
+			return getRuleContext(VariableModifierContext.class,i);
+		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public BlockContext block() {
 			return getRuleContext(BlockContext.class,0);
+		}
+		public CatchTypeContext catchType() {
+			return getRuleContext(CatchTypeContext.class,0);
 		}
 		public CatchClauseContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5032,11 +5032,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class CatchTypeContext extends ParserRuleContext {
-		public List<QualifiedNameContext> qualifiedName() {
-			return getRuleContexts(QualifiedNameContext.class);
-		}
 		public QualifiedNameContext qualifiedName(int i) {
 			return getRuleContext(QualifiedNameContext.class,i);
+		}
+		public List<QualifiedNameContext> qualifiedName() {
+			return getRuleContexts(QualifiedNameContext.class);
 		}
 		public CatchTypeContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5176,11 +5176,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ResourcesContext extends ParserRuleContext {
-		public ResourceContext resource(int i) {
-			return getRuleContext(ResourceContext.class,i);
-		}
 		public List<ResourceContext> resource() {
 			return getRuleContexts(ResourceContext.class);
+		}
+		public ResourceContext resource(int i) {
+			return getRuleContext(ResourceContext.class,i);
 		}
 		public ResourcesContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5234,20 +5234,20 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ResourceContext extends ParserRuleContext {
-		public VariableModifierContext variableModifier(int i) {
-			return getRuleContext(VariableModifierContext.class,i);
-		}
 		public List<VariableModifierContext> variableModifier() {
 			return getRuleContexts(VariableModifierContext.class);
 		}
-		public ClassOrInterfaceTypeContext classOrInterfaceType() {
-			return getRuleContext(ClassOrInterfaceTypeContext.class,0);
+		public VariableModifierContext variableModifier(int i) {
+			return getRuleContext(VariableModifierContext.class,i);
+		}
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
 		}
 		public VariableDeclaratorIdContext variableDeclaratorId() {
 			return getRuleContext(VariableDeclaratorIdContext.class,0);
 		}
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
+		public ClassOrInterfaceTypeContext classOrInterfaceType() {
+			return getRuleContext(ClassOrInterfaceTypeContext.class,0);
 		}
 		public ResourceContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5304,14 +5304,14 @@ public class JavaParser extends Parser {
 		public List<BlockStatementContext> blockStatement() {
 			return getRuleContexts(BlockStatementContext.class);
 		}
+		public SwitchLabelContext switchLabel(int i) {
+			return getRuleContext(SwitchLabelContext.class,i);
+		}
 		public List<SwitchLabelContext> switchLabel() {
 			return getRuleContexts(SwitchLabelContext.class);
 		}
 		public BlockStatementContext blockStatement(int i) {
 			return getRuleContext(BlockStatementContext.class,i);
-		}
-		public SwitchLabelContext switchLabel(int i) {
-			return getRuleContext(SwitchLabelContext.class,i);
 		}
 		public SwitchBlockStatementGroupContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5437,9 +5437,6 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ForControlContext extends ParserRuleContext {
-		public ForUpdateContext forUpdate() {
-			return getRuleContext(ForUpdateContext.class,0);
-		}
 		public ForInitContext forInit() {
 			return getRuleContext(ForInitContext.class,0);
 		}
@@ -5448,6 +5445,9 @@ public class JavaParser extends Parser {
 		}
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
+		}
+		public ForUpdateContext forUpdate() {
+			return getRuleContext(ForUpdateContext.class,0);
 		}
 		public ForControlContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5521,11 +5521,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ForInitContext extends ParserRuleContext {
-		public LocalVariableDeclarationContext localVariableDeclaration() {
-			return getRuleContext(LocalVariableDeclarationContext.class,0);
-		}
 		public ExpressionListContext expressionList() {
 			return getRuleContext(ExpressionListContext.class,0);
+		}
+		public LocalVariableDeclarationContext localVariableDeclaration() {
+			return getRuleContext(LocalVariableDeclarationContext.class,0);
 		}
 		public ForInitContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5573,20 +5573,20 @@ public class JavaParser extends Parser {
 	}
 
 	public static class EnhancedForControlContext extends ParserRuleContext {
-		public VariableModifierContext variableModifier(int i) {
-			return getRuleContext(VariableModifierContext.class,i);
-		}
 		public List<VariableModifierContext> variableModifier() {
 			return getRuleContexts(VariableModifierContext.class);
 		}
-		public VariableDeclaratorIdContext variableDeclaratorId() {
-			return getRuleContext(VariableDeclaratorIdContext.class,0);
+		public VariableModifierContext variableModifier(int i) {
+			return getRuleContext(VariableModifierContext.class,i);
 		}
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
 		}
 		public ExpressionContext expression() {
 			return getRuleContext(ExpressionContext.class,0);
+		}
+		public VariableDeclaratorIdContext variableDeclaratorId() {
+			return getRuleContext(VariableDeclaratorIdContext.class,0);
 		}
 		public EnhancedForControlContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -5850,33 +5850,33 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ExpressionContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public NonWildcardTypeArgumentsContext nonWildcardTypeArguments() {
 			return getRuleContext(NonWildcardTypeArgumentsContext.class,0);
-		}
-		public ExplicitGenericInvocationContext explicitGenericInvocation() {
-			return getRuleContext(ExplicitGenericInvocationContext.class,0);
-		}
-		public ExpressionListContext expressionList() {
-			return getRuleContext(ExpressionListContext.class,0);
-		}
-		public InnerCreatorContext innerCreator() {
-			return getRuleContext(InnerCreatorContext.class,0);
-		}
-		public SuperSuffixContext superSuffix() {
-			return getRuleContext(SuperSuffixContext.class,0);
 		}
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
+		public ExplicitGenericInvocationContext explicitGenericInvocation() {
+			return getRuleContext(ExplicitGenericInvocationContext.class,0);
+		}
 		public PrimaryContext primary() {
 			return getRuleContext(PrimaryContext.class,0);
 		}
+		public ExpressionListContext expressionList() {
+			return getRuleContext(ExpressionListContext.class,0);
+		}
+		public SuperSuffixContext superSuffix() {
+			return getRuleContext(SuperSuffixContext.class,0);
+		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
 		}
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
+		}
+		public InnerCreatorContext innerCreator() {
+			return getRuleContext(InnerCreatorContext.class,0);
 		}
 		public CreatorContext creator() {
 			return getRuleContext(CreatorContext.class,0);
@@ -6268,24 +6268,24 @@ public class JavaParser extends Parser {
 	}
 
 	public static class PrimaryContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public NonWildcardTypeArgumentsContext nonWildcardTypeArguments() {
 			return getRuleContext(NonWildcardTypeArgumentsContext.class,0);
 		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public ExplicitGenericInvocationSuffixContext explicitGenericInvocationSuffix() {
 			return getRuleContext(ExplicitGenericInvocationSuffixContext.class,0);
-		}
-		public LiteralContext literal() {
-			return getRuleContext(LiteralContext.class,0);
 		}
 		public TypeContext type() {
 			return getRuleContext(TypeContext.class,0);
 		}
+		public ExpressionContext expression() {
+			return getRuleContext(ExpressionContext.class,0);
+		}
 		public ArgumentsContext arguments() {
 			return getRuleContext(ArgumentsContext.class,0);
 		}
-		public ExpressionContext expression() {
-			return getRuleContext(ExpressionContext.class,0);
+		public LiteralContext literal() {
+			return getRuleContext(LiteralContext.class,0);
 		}
 		public PrimaryContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -6392,11 +6392,11 @@ public class JavaParser extends Parser {
 	}
 
 	public static class CreatorContext extends ParserRuleContext {
-		public ArrayCreatorRestContext arrayCreatorRest() {
-			return getRuleContext(ArrayCreatorRestContext.class,0);
-		}
 		public NonWildcardTypeArgumentsContext nonWildcardTypeArguments() {
 			return getRuleContext(NonWildcardTypeArgumentsContext.class,0);
+		}
+		public ArrayCreatorRestContext arrayCreatorRest() {
+			return getRuleContext(ArrayCreatorRestContext.class,0);
 		}
 		public ClassCreatorRestContext classCreatorRest() {
 			return getRuleContext(ClassCreatorRestContext.class,0);
@@ -6477,18 +6477,18 @@ public class JavaParser extends Parser {
 	}
 
 	public static class CreatedNameContext extends ParserRuleContext {
-		public List<TerminalNode> Identifier() { return getTokens(JavaParser.Identifier); }
+		public TypeArgumentsOrDiamondContext typeArgumentsOrDiamond(int i) {
+			return getRuleContext(TypeArgumentsOrDiamondContext.class,i);
+		}
 		public TerminalNode Identifier(int i) {
 			return getToken(JavaParser.Identifier, i);
 		}
+		public List<TerminalNode> Identifier() { return getTokens(JavaParser.Identifier); }
 		public List<TypeArgumentsOrDiamondContext> typeArgumentsOrDiamond() {
 			return getRuleContexts(TypeArgumentsOrDiamondContext.class);
 		}
 		public PrimitiveTypeContext primitiveType() {
 			return getRuleContext(PrimitiveTypeContext.class,0);
-		}
-		public TypeArgumentsOrDiamondContext typeArgumentsOrDiamond(int i) {
-			return getRuleContext(TypeArgumentsOrDiamondContext.class,i);
 		}
 		public CreatedNameContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -6576,12 +6576,12 @@ public class JavaParser extends Parser {
 	}
 
 	public static class InnerCreatorContext extends ParserRuleContext {
+		public NonWildcardTypeArgumentsOrDiamondContext nonWildcardTypeArgumentsOrDiamond() {
+			return getRuleContext(NonWildcardTypeArgumentsOrDiamondContext.class,0);
+		}
 		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public ClassCreatorRestContext classCreatorRest() {
 			return getRuleContext(ClassCreatorRestContext.class,0);
-		}
-		public NonWildcardTypeArgumentsOrDiamondContext nonWildcardTypeArgumentsOrDiamond() {
-			return getRuleContext(NonWildcardTypeArgumentsOrDiamondContext.class,0);
 		}
 		public InnerCreatorContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -6628,14 +6628,14 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ArrayCreatorRestContext extends ParserRuleContext {
-		public ArrayInitializerContext arrayInitializer() {
-			return getRuleContext(ArrayInitializerContext.class,0);
-		}
 		public ExpressionContext expression(int i) {
 			return getRuleContext(ExpressionContext.class,i);
 		}
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
+		}
+		public ArrayInitializerContext arrayInitializer() {
+			return getRuleContext(ArrayInitializerContext.class,0);
 		}
 		public ArrayCreatorRestContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -7056,10 +7056,10 @@ public class JavaParser extends Parser {
 	}
 
 	public static class ExplicitGenericInvocationSuffixContext extends ParserRuleContext {
-		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public SuperSuffixContext superSuffix() {
 			return getRuleContext(SuperSuffixContext.class,0);
 		}
+		public TerminalNode Identifier() { return getToken(JavaParser.Identifier, 0); }
 		public ArgumentsContext arguments() {
 			return getRuleContext(ArgumentsContext.class,0);
 		}
@@ -7184,10 +7184,10 @@ public class JavaParser extends Parser {
 		case 13: return precpred(_ctx, 24);
 		case 14: return precpred(_ctx, 23);
 		case 15: return precpred(_ctx, 22);
-		case 16: return precpred(_ctx, 21);
 		case 17: return precpred(_ctx, 20);
-		case 18: return precpred(_ctx, 19);
+		case 16: return precpred(_ctx, 21);
 		case 19: return precpred(_ctx, 16);
+		case 18: return precpred(_ctx, 19);
 		case 20: return precpred(_ctx, 9);
 		}
 		return true;

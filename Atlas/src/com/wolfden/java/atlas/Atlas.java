@@ -1,29 +1,37 @@
 package com.wolfden.java.atlas;
 
+import java.awt.Color;
 import java.io.IOException;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.Bullet;
 import org.eclipse.swt.custom.CaretEvent;
 import org.eclipse.swt.custom.CaretListener;
 import org.eclipse.swt.custom.ExtendedModifyEvent;
 import org.eclipse.swt.custom.ExtendedModifyListener;
 import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.custom.LineStyleListener;
+import org.eclipse.swt.custom.ST;
+import org.eclipse.swt.custom.StyleRange;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.graphics.GlyphMetrics;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
@@ -56,6 +64,8 @@ public class Atlas {
 	private PreferenceManager preferenceManager;
 	private Label lblPlainText;
 	private Indentable listener;
+	private boolean unsavedChanges = false;
+	private int lnWidth = 5;
 
 	public Atlas() {
 		preferenceManager = PreferenceManager.getInstance();
@@ -114,6 +124,25 @@ public class Atlas {
 
 		shlAtlas.open();
 		shlAtlas.layout();
+		
+		//handle closing if there is unsaved changes
+		shlAtlas.addListener(SWT.Close, new Listener() {
+			public void handleEvent(Event event) {
+				if(unsavedChanges)
+				{
+					MessageBox messageBox = new MessageBox(shlAtlas, SWT.ICON_QUESTION | SWT.YES | SWT.NO | SWT.CANCEL);
+			        messageBox.setMessage("Would you like to save your changes?");
+			        messageBox.setText("Unsaved Changes");
+			        
+			        int res = messageBox.open();
+			        if (res == SWT.CANCEL)
+			        	event.doit = false;
+			        else if(res == SWT.YES)
+			        	saveAs();
+				}
+			}
+		});
+
 		while (!shlAtlas.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -175,6 +204,8 @@ public class Atlas {
 		gl_shlAtlas.marginHeight = 0;
 		shlAtlas.setLayout(gl_shlAtlas);
 
+		styledText = new StyledText(shlAtlas, SWT.V_SCROLL | SWT.H_SCROLL);
+		
 		Menu menu = new Menu(shlAtlas, SWT.BAR);
 		shlAtlas.setMenuBar(menu);
 
@@ -268,8 +299,14 @@ public class Atlas {
 		Menu menu_6 = new Menu(mntmView);
 		mntmView.setMenu(menu_6);
 
-		MenuItem mntmWordWrap = new MenuItem(menu_6, SWT.CHECK);
+		final MenuItem mntmWordWrap = new MenuItem(menu_6, SWT.CHECK);
 		mntmWordWrap.setText("Word wrap");
+		mntmWordWrap.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				styledText.setWordWrap(mntmWordWrap.getSelection());
+			}
+		});
 
 		MenuItem mntmSyntax = new MenuItem(menu_6, SWT.CASCADE);
 		mntmSyntax.setText("Syntax");
@@ -294,12 +331,13 @@ public class Atlas {
 		mntmSelectAll_1.setAccelerator(AcceleratorHelper.ATLAS_SELECT_ALL);
 		;
 
-		styledText = new StyledText(shlAtlas, SWT.V_SCROLL | SWT.H_SCROLL);
+		
 		styledText
 				.setFont(SWTResourceManager.getFont("Monaco", 12, SWT.NORMAL));
 		styledText.setAlwaysShowScrollBars(false);
 		styledText.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		styledText.setBackground(SWTResourceManager.getColor(39, 40, 34));
+		//styledText.setWordWrap(true);
 		styledText.addCaretListener(new CaretListener() {
 			public void caretMoved(CaretEvent event) {
 				// TODO - Implement Line numbering later
@@ -325,6 +363,7 @@ public class Atlas {
 				lblLineCount.setText("Lines: " + styledText.getLineCount()
 						+ ", Characters: " + styledText.getCharCount());
 				composite.layout();
+				unsavedChanges = true;
 				// TODO - Implement Line numbering later
 				// int digits = 3;
 				// int lineCount = styledText.getLineCount();
@@ -348,22 +387,21 @@ public class Atlas {
 
 			}
 		});
+		
+		styledText.setWrapIndent(lnWidth*10);
 		styledText.addLineStyleListener(new LineStyleListener() {
-			public void lineGetStyle(LineStyleEvent event) {
+			public void lineGetStyle(LineStyleEvent e) {
 
-				parseSyntax(event);
+				parseSyntax(e);
 
 				// TODO - Implement Line numbering later
-				// int activeLine = styledText.getLineAtOffset(styledText
-				// .getCaretOffset());
-				// int currentLine =
-				// styledText.getLineAtOffset(event.lineOffset);
+				// int activeLine = styledText.getLineAtOffset(styledText.getCaretOffset());
+				// int currentLine = styledText.getLineAtOffset(event.lineOffset);
 				// event.bulletIndex = currentLine;
 				// int width = 36;
 				//
 				// if (styledText.getLineCount() > 999)
-				// width = (int) ((Math.floor(Math.log10(styledText
-				// .getLineCount())) + 1) * 12);
+				// width = (int) ((Math.floor(Math.log10(styledText.getLineCount())) + 1) * 12);
 				// // Set the style, 12 pixles wide for each digit
 				// StyleRange style = new StyleRange();
 				// style.metrics = new GlyphMetrics(0, 0, width);
@@ -371,6 +409,24 @@ public class Atlas {
 				// // style.background = Theme.highlightedLineColor;
 				// }
 				// event.bullet = new Bullet(ST.BULLET_NUMBER, style);
+				e.bulletIndex = styledText.getLineAtOffset(e.lineOffset);
+				
+				int oldWidth = lnWidth;
+				if(styledText.getLineCount() > 99) {
+					lnWidth = (int) ((Math.floor(Math.log10(styledText.getLineCount())) + 1) * 12);
+				}
+				if(oldWidth > lnWidth)
+				{
+					styledText.setWrapIndent(lnWidth*10);
+					styledText.redraw();
+				}
+
+		        StyleRange style = new StyleRange();
+		        style.metrics = new GlyphMetrics(0, 0, 50);
+		        style.foreground = new org.eclipse.swt.graphics.Color(null, 52, 186, 207);
+		        
+		        e.bullet = new Bullet(ST.BULLET_NUMBER,style);
+				
 			}
 		});
 		styledText.setBottomMargin(8);
@@ -592,6 +648,7 @@ public class Atlas {
 			fileName = temp;
 			try {
 				FileManager.saveFileAs(fileName, styledText.getText());
+				unsavedChanges = false;
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -628,4 +685,6 @@ public class Atlas {
 	public void selectAll() {
 		styledText.selectAll();
 	}
+	
+	
 }
