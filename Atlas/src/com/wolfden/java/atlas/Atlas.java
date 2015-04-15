@@ -49,6 +49,8 @@ import com.wolfden.java.atlas.syntax.java.JavaLexer;
 import com.wolfden.java.atlas.syntax.java.JavaTokenReader;
 import com.wolfden.java.atlas.syntax.plaintext.PlainTextTokenReader;
 import com.wolfden.java.atlas.util.ErrorUtils;
+import org.eclipse.swt.custom.LineBackgroundListener;
+import org.eclipse.swt.custom.LineBackgroundEvent;
 
 public class Atlas {
 	private static final String AppName = "Atlas";
@@ -331,7 +333,19 @@ public class Atlas {
 		mntmSelectAll_1.setAccelerator(AcceleratorHelper.ATLAS_SELECT_ALL);
 		;
 
-		
+		styledText = new StyledText(shlAtlas, SWT.V_SCROLL | SWT.H_SCROLL);
+		styledText.addLineBackgroundListener(new LineBackgroundListener() {
+			public void lineGetBackground(LineBackgroundEvent event) {
+				if (styledText.getLineAtOffset(event.lineOffset) == getCurrentLine()){
+				    // If the cursor is on this line, set this line's background color to the
+				    // line highlighting color.
+				    event.lineBackground = SWTResourceManager.getColor(52, 54, 46);
+				  }else{
+				    // Otherwise do nothing at all.
+				    event.lineBackground = null;
+				 }
+			}
+		});
 		styledText
 				.setFont(SWTResourceManager.getFont("Monaco", 12, SWT.NORMAL));
 		styledText.setAlwaysShowScrollBars(false);
@@ -656,6 +670,13 @@ public class Atlas {
 		}
 
 		// updateWindowTitle();
+	}
+	
+	public int getCurrentLine(){
+		int pos = styledText.getCaretOffset();
+	    // For readability, get the line number into a temp variable
+	    int line = styledText.getLineAtOffset(pos);
+	    return line;
 	}
 
 	/**
