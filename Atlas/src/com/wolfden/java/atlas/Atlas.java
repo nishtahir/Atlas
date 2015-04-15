@@ -186,7 +186,7 @@ public class Atlas {
 
 		MenuItem mntmNew = new MenuItem(menu_2, SWT.NONE);
 		mntmNew.setText("New");
-		mntmNew.setAccelerator(SelectionHelper.SWT_NEW);
+		mntmNew.setAccelerator(AcceleratorHelper.ATLAS_NEW);
 
 		MenuItem mntmOpen = new MenuItem(menu_2, SWT.NONE);
 		mntmOpen.addSelectionListener(new SelectionAdapter() {
@@ -196,11 +196,11 @@ public class Atlas {
 			}
 		});
 		mntmOpen.setText("Open");
-		mntmOpen.setAccelerator(SelectionHelper.SWT_OPEN);
+		mntmOpen.setAccelerator(AcceleratorHelper.ATLAS_OPEN);
 
 		MenuItem mntmSave = new MenuItem(menu_2, SWT.NONE);
 		mntmSave.setText("Save");
-		mntmSave.setAccelerator(SelectionHelper.SWT_SAVE);
+		mntmSave.setAccelerator(AcceleratorHelper.ATLAS_SAVE);
 		;
 
 		MenuItem mntmSaveAs = new MenuItem(menu_2, SWT.NONE);
@@ -211,7 +211,7 @@ public class Atlas {
 			}
 		});
 		mntmSaveAs.setText("Save As...");
-		mntmSaveAs.setAccelerator(SelectionHelper.SWT_SAVE_AS);
+		mntmSaveAs.setAccelerator(AcceleratorHelper.ATLAS_SAVE_AS);
 		;
 
 		MenuItem mntmEdit = new MenuItem(menu, SWT.CASCADE);
@@ -222,12 +222,12 @@ public class Atlas {
 
 		MenuItem mntmUndo = new MenuItem(menu_3, SWT.NONE);
 		mntmUndo.setText("Undo");
-		mntmUndo.setAccelerator(SelectionHelper.SWT_UNDO);
+		mntmUndo.setAccelerator(AcceleratorHelper.ATLAS_UNDO);
 		;
 
 		MenuItem mntmRedo = new MenuItem(menu_3, SWT.NONE);
 		mntmRedo.setText("Redo");
-		mntmRedo.setAccelerator(SelectionHelper.SWT_REDO);
+		mntmRedo.setAccelerator(AcceleratorHelper.ATLAS_REDO);
 
 		new MenuItem(menu_3, SWT.SEPARATOR);
 
@@ -239,7 +239,7 @@ public class Atlas {
 			}
 		});
 		mntmCut.setText("Cut");
-		mntmCut.setAccelerator(SelectionHelper.SWT_CUT);
+		mntmCut.setAccelerator(AcceleratorHelper.ATLAS_CUT);
 
 		MenuItem mntmCopy = new MenuItem(menu_3, SWT.NONE);
 		mntmCopy.addSelectionListener(new SelectionAdapter() {
@@ -249,7 +249,7 @@ public class Atlas {
 			}
 		});
 		mntmCopy.setText("Copy");
-		mntmCopy.setAccelerator(SelectionHelper.SWT_COPY);
+		mntmCopy.setAccelerator(AcceleratorHelper.ATLAS_COPY);
 
 		MenuItem mntmPaste = new MenuItem(menu_3, SWT.NONE);
 		mntmPaste.addSelectionListener(new SelectionAdapter() {
@@ -259,7 +259,7 @@ public class Atlas {
 			}
 		});
 		mntmPaste.setText("Paste");
-		mntmPaste.setAccelerator(SelectionHelper.SWT_PASTE);
+		mntmPaste.setAccelerator(AcceleratorHelper.ATLAS_PASTE);
 		;
 
 		MenuItem mntmView = new MenuItem(menu, SWT.CASCADE);
@@ -291,7 +291,7 @@ public class Atlas {
 			}
 		});
 		mntmSelectAll_1.setText("Select All");
-		mntmSelectAll_1.setAccelerator(SelectionHelper.SWT_SELECT_ALL);
+		mntmSelectAll_1.setAccelerator(AcceleratorHelper.ATLAS_SELECT_ALL);
 		;
 
 		styledText = new StyledText(shlAtlas, SWT.V_SCROLL | SWT.H_SCROLL);
@@ -446,6 +446,26 @@ public class Atlas {
 
 		Menu menu_5 = createSyntaxMenu(lblPlainText);
 		lblPlainText.setMenu(menu_5);
+		
+		MenuItem mntmText = new MenuItem(menu_6, SWT.CASCADE);
+		mntmText.setText("Text size");
+		
+		Menu menu_9 = new Menu(mntmText);
+		mntmText.setMenu(menu_9);
+		
+		MenuItem mntmIncreaseFontSize = new MenuItem(menu_9, SWT.NONE);
+		mntmIncreaseFontSize.setText("Increase");
+		mntmIncreaseFontSize.setAccelerator(AcceleratorHelper.ATLAS_INCREASE_FONT);
+		
+		MenuItem mntmDecreaseFontSize = new MenuItem(menu_9, SWT.NONE);
+		mntmDecreaseFontSize.setText("Decrease");
+		mntmDecreaseFontSize.setAccelerator(AcceleratorHelper.ATLAS_DECREASE_FONT);
+		
+		new MenuItem(menu_9, SWT.SEPARATOR);
+		
+		MenuItem mntmReset = new MenuItem(menu_9, SWT.NONE);
+		mntmReset.setText("Reset");
+		mntmReset.setAccelerator(AcceleratorHelper.ATLAS_RESET_FONT);
 
 		MenuItem mntmSource = new MenuItem(menu, SWT.CASCADE);
 		mntmSource.setText("Source");
@@ -455,7 +475,7 @@ public class Atlas {
 
 		MenuItem mntmFormat = new MenuItem(menu_8, SWT.NONE);
 		mntmFormat.setText("Format");
-		mntmFormat.setAccelerator(SelectionHelper.SWT_FORMAT_CODE);
+		mntmFormat.setAccelerator(AcceleratorHelper.ATLAS_FORMAT_CODE);
 		mntmFormat.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
