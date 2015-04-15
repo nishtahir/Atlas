@@ -205,8 +205,6 @@ public class Atlas {
 		gl_shlAtlas.marginWidth = 0;
 		gl_shlAtlas.marginHeight = 0;
 		shlAtlas.setLayout(gl_shlAtlas);
-
-		styledText = new StyledText(shlAtlas, SWT.V_SCROLL | SWT.H_SCROLL);
 		
 		Menu menu = new Menu(shlAtlas, SWT.BAR);
 		shlAtlas.setMenuBar(menu);
