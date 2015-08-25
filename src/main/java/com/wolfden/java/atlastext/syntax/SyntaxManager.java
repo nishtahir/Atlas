@@ -1,6 +1,7 @@
 package com.wolfden.java.atlastext.syntax;
 
 import com.wolfden.java.atlastext.preferences.PreferenceManager;
+import com.wolfden.java.atlastext.syntax.c.CTokenReader;
 import com.wolfden.java.atlastext.syntax.java.JavaTokenReader;
 import com.wolfden.java.atlastext.syntax.plaintext.PlainTextTokenReader;
 
@@ -21,7 +22,8 @@ public class SyntaxManager {
         switch (preference) {
             case Languages.JAVA:
                 return new JavaTokenReader();
-
+            case Languages.C:
+                return new CTokenReader();
             default:
                 return new PlainTextTokenReader();
         }

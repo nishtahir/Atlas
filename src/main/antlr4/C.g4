@@ -29,6 +29,10 @@
 /** C 2011 grammar built from the C11 Spec */
 grammar C;
 
+@header {
+    package com.wolfden.java.atlastext.syntax.c;
+}
+
 primaryExpression
     :   Identifier
     |   Constant
