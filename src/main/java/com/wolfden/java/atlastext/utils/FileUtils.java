@@ -16,7 +16,6 @@ import org.eclipse.swt.custom.StyledText;
  *
  */
 public class FileUtils {
-	private static InputStream inputStream;
 
 	/**
 	 * @param path
@@ -33,13 +32,13 @@ public class FileUtils {
 	 * @throws IOException
 	 */
 	public static String getFileContents(File file) throws IOException {
-		inputStream = new BufferedInputStream(new FileInputStream(file));
-		StringBuffer buf = new StringBuffer();
+		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+		StringBuilder builder = new StringBuilder();
 		int c;
 		while ((c = inputStream.read()) != -1) {
-			buf.append((char) c);
+			builder.append((char) c);
 		}
-		return buf.toString();
+		return builder.toString();
 	}
 
 	/**
