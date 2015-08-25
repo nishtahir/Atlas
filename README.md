@@ -1,6 +1,6 @@
-# Atlas #
+# Atlas Text#
 
-Atlas is a decent text editor application with syntax highlighting.
+**Atlas Text** is a decent text editor application with syntax highlighting.
 
 ![atlas_screenshot_1.png](https://bitbucket.org/repo/d5b8M5/images/3113262366-atlas_screenshot_1.png)
 
@@ -12,10 +12,11 @@ Atlas is a decent text editor application with syntax highlighting.
 
 * Eclipse SWT
 * ANTLR 4.5
+* JUnit 4
 
 ### Tools ###
 
-* ANTLR IDE (Eclipse Plugin)
+* Apache Maven
 
 ### Contribution guidelines ###
 
@@ -23,6 +24,13 @@ Atlas is a decent text editor application with syntax highlighting.
 * Unit tests are appreciated
 * Report bugs using the issue tracker.
 * Add feature requests using the issue tracker
+
+#### Testing conventions ####
+
+* _Ideally_ every Foo.java should have a corresponding FooTest.java class
+* Methods in FooTest.java should follow the following convention
+    
+    public void methodToTest_TestCondition_ExpectedResult() { ... }
 
 ### LICENSE ###
 
