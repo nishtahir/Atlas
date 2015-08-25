@@ -12,7 +12,7 @@ local.properties
 .loadpath
 
 # Eclipse Core
-.project
+#.project - We need this otherwise we can’t import it into fresh copies of eclipse
 
 # External tool builders
 .externalToolBuilders/
@@ -24,7 +24,7 @@ local.properties
 .cproject
 
 # JDT-specific (Eclipse Java Development Tools)
-.classpath
+#.classpath - We need this otherwise we can’t import it into fresh copies of eclipse
 
 # PDT-specific
 .buildpath
@@ -69,3 +69,4 @@ Temporary Items
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/bin/
