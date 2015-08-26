@@ -17,7 +17,7 @@ public class FileManagerTest {
     FileManager fileManagerInstance;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp(){
         fileManagerInstance = FileManager.getInstance();
     }
 
@@ -41,15 +41,9 @@ public class FileManagerTest {
         assertNotNull(fileManagerInstance);
     }
 
-    @Test
+    @Test(expected = NullPointerException.class)
     public void testGetActiveFile_WithNullActiveFile_ThrowsNullPointerException() {
-
-        try {
-            fileManagerInstance.getActiveFile();
-            fail("Null pointer exception not thrown");
-        } catch (NullPointerException npe) {
-
-        }
+        fileManagerInstance.getActiveFile();
     }
 
     @Test
@@ -61,46 +55,34 @@ public class FileManagerTest {
         assertEquals(testFileName, fileName);
     }
 
-    @Test
-    public void testSetActiveFile_WhenAttemptToSetToNull_ThrowsNullPointerException() throws Exception {
-        try {
-            fileManagerInstance.setActiveFile(null);
-            fail("NullPointerException was not thrown");
-        } catch (NullPointerException npe) {
-
-        }
+    @Test(expected = NullPointerException.class)
+    public void testSetActiveFile_WhenAttemptToSetToNull_ThrowsNullPointerException(){
+        fileManagerInstance.setActiveFile(null);
     }
 
     @Test
-    public void testSaveFile() throws Exception {
+    public void testSaveFile(){
     }
 
     @Test
-    public void testSaveFileAs() throws Exception {
+    public void testSaveFileAs(){
 
     }
 
-    @Test
-    public void testOpenFile_WithFileThatDoesNotExist_ThrowsFileNotFoundException() {
+    @Test(expected = FileNotFoundException.class)
+    public void testOpenFile_WithFileThatDoesNotExist_ThrowsFileNotFoundException() throws IOException {
         File file = new File("fileThatDoesNotExist");
-        try {
-            fileManagerInstance.openFile(file);
-            fail("Attempted to open a File that does not Exist");
-        } catch (FileNotFoundException fnfe) {
-
-        } catch (IOException ioe) {
-
-        }
+        fileManagerInstance.openFile(file);
     }
 
     @Test
-    public void testGetActiveFileName_WithNoActiveFile_ReturnsNull() throws Exception {
+    public void testGetActiveFileName_WithNoActiveFile_ReturnsNull(){
         String activeFileName = fileManagerInstance.getActiveFileName();
         assertNull(activeFileName);
     }
 
     @Test
-    public void testGetActiveFileName_WithActiveFile_ReturnsCorrectFileName() throws Exception {
+    public void testGetActiveFileName_WithActiveFile_ReturnsCorrectFileName(){
         File file = new File("TestFile");
         fileManagerInstance.setActiveFile(file);
         String activeFileName = fileManagerInstance.getActiveFileName();
