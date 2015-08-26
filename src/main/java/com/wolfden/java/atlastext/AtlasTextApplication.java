@@ -323,7 +323,7 @@ public class AtlasTextApplication {
 			}
 		});
 		styledText
-				.setFont(SWTResourceManager.getFont("Monaco", 12, SWT.NORMAL));
+				.setFont(SWTResourceManager.getFont(styledText.getFont().toString(), 12, SWT.NORMAL));
 		styledText.setAlwaysShowScrollBars(false);
 		styledText.setForeground(SWTResourceManager.getColor(245, 245, 245));
 		styledText.setBackground(SWTResourceManager.getColor(39, 40, 34));
