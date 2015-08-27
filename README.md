@@ -30,7 +30,13 @@
 * _Ideally_ every Foo.java should have a corresponding FooTest.java class
 * Methods in FooTest.java should follow the following convention
     
+```java
     public void methodToTest_TestCondition_ExpectedResult() { ... }
+```
+### TODO ###
+
+* Auto code formatting
+* User preferences and Settings menu
 
 ### LICENSE ###
 
