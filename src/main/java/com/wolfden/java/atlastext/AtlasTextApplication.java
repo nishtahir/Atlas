@@ -27,6 +27,11 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.*;
 
 import java.io.IOException;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.DragSource;
 
 /**
  *
@@ -229,6 +234,9 @@ public class AtlasTextApplication {
 		});
 		mntmSaveAs.setText("Save As...");
 		mntmSaveAs.setAccelerator(AcceleratorHelper.ATLAS_SAVE_AS);
+		
+		MenuItem mntmQuit = new MenuItem(menu_2, SWT.NONE);
+		mntmQuit.setText("Quit");
 
 		MenuItem mntmEdit = new MenuItem(menu, SWT.CASCADE);
 		mntmEdit.setText("Edit");
@@ -512,6 +520,15 @@ public class AtlasTextApplication {
 		MenuItem mntmFormat = new MenuItem(menu_8, SWT.NONE);
 		mntmFormat.setText("Format");
 		mntmFormat.setAccelerator(AcceleratorHelper.ATLAS_FORMAT_CODE);
+		
+		MenuItem mntmHelp = new MenuItem(menu, SWT.CASCADE);
+		mntmHelp.setText("Help");
+		
+		Menu menu_10 = new Menu(mntmHelp);
+		mntmHelp.setMenu(menu_10);
+		
+		MenuItem mntmAbout = new MenuItem(menu_10, SWT.NONE);
+		mntmAbout.setText("About");
 		mntmFormat.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -674,5 +691,4 @@ public class AtlasTextApplication {
             new AboutDialog(shlAtlas).open();
         }
     };
-
 }
