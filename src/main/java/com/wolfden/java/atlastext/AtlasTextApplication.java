@@ -1,10 +1,12 @@
 package com.wolfden.java.atlastext;
 
+import com.wolfden.java.atlastext.dialog.AboutDialog;
 import com.wolfden.java.atlastext.preferences.PreferenceManager;
 import com.wolfden.java.atlastext.swt.SWTResourceManager;
 import com.wolfden.java.atlastext.syntax.Indentable;
 import com.wolfden.java.atlastext.syntax.StyledTokenReader;
 import com.wolfden.java.atlastext.syntax.SyntaxManager;
+import com.wolfden.java.atlastext.syntax.c.CTokenReader;
 import com.wolfden.java.atlastext.syntax.java.JavaIndentationListener;
 import com.wolfden.java.atlastext.syntax.java.JavaLexer;
 import com.wolfden.java.atlastext.syntax.java.JavaTokenReader;
@@ -26,22 +28,30 @@ import org.eclipse.swt.widgets.*;
 
 import java.io.IOException;
 
+/**
+ *
+ */
 public class AtlasTextApplication {
-	private static final String AppName = "Atlas";
+
+    /**
+     * Application Name
+     */
+    public static final String APP_NAME = "Atlas Text";
 
 	protected Shell shlAtlas;
 	private StyledText styledText;
-	int numDigits = 3;
-	int curActiveLine = 0;
+
 	private Label lblLineCount;
 	private Composite composite;
-	private int numBlockComments = -1;
-	private StyledTokenReader styledTokenReader;
+
+    private StyledTokenReader styledTokenReader;
 	private PreferenceManager preferenceManager;
 	private Label lblPlainText;
 	private Indentable listener;
+
 	private boolean unsavedChanges = false;
-	private int lnWidth = 5;
+
+    private int lnWidth = 5;
 
 	private FileManager fileManager;
 
@@ -70,27 +80,11 @@ public class AtlasTextApplication {
 	 * Open the window.
 	 */
 	public void open() {
-		Display.setAppName(AppName);
+		Display.setAppName(APP_NAME);
 		Display display = Display.getDefault();
 
-		Menu systemMenu = Display.getDefault().getSystemMenu();
-		if (systemMenu != null) {
-			MenuItem preferrences = getSystemItem(systemMenu,
-					SWT.ID_PREFERENCES);
-			MenuItem about = getSystemItem(systemMenu, SWT.ID_ABOUT);
-			preferrences.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					showAboutDialog();
-				}
-			});
-			about.addSelectionListener(new SelectionAdapter() {
-				@Override
-				public void widgetSelected(SelectionEvent e) {
-					showAboutDialog();
-				}
-			});
-		}
+        setupSystemMenu(display);
+
 		createContents();
 
 		Monitor primary = display.getPrimaryMonitor();
@@ -131,22 +125,37 @@ public class AtlasTextApplication {
 		}
 	}
 
-	/**
-	 * Show
-	 */
-	protected void showAboutDialog() {
-		MessageBox about = new MessageBox(shlAtlas);
-		about.setText("About " + AppName);
-		about.setMessage("Copyright Nish Tahir 2015. \n Version: "
-				+ preferenceManager
-				.getPreference(PreferenceManager.KEY_VERSION)
-				+ " alpha");
-		about.open();
-	}
+    /**
+     * Setup System MenuBar Options.
+     * Aimed at OSX system Menubar support
+     * @param display
+     */
+    private void setupSystemMenu(Display display) {
+        Menu systemMenu = display.getSystemMenu();
+        if (systemMenu != null) {
 
-	private static MenuItem getSystemItem(Menu menu, int id) {
+            MenuItem preferences = getMenuItem(systemMenu,
+                    SWT.ID_PREFERENCES);
+            if (preferences != null) {
+                preferences.addSelectionListener(aboutSelectionAdapter);
+            }
+
+            MenuItem about = getMenuItem(systemMenu, SWT.ID_ABOUT);
+            if (about != null) {
+                about.addSelectionListener(aboutSelectionAdapter);
+            }
+        }
+    }
+
+    /**
+     *
+     * @param menu Menu to search
+     * @param itemId MenuItem id to get
+     * @return MenuItem with matching Item ID. Null if not available
+     */
+	private static MenuItem getMenuItem(Menu menu, int itemId) {
 		for (MenuItem item : menu.getItems()) {
-			if (item.getID() == id)
+			if (item.getID() == itemId)
 				return item;
 		}
 		return null;
@@ -277,11 +286,11 @@ public class AtlasTextApplication {
 		final MenuItem mntmWordWrap = new MenuItem(menu_6, SWT.CHECK);
 		mntmWordWrap.setText("Word wrap");
 		mntmWordWrap.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				styledText.setWordWrap(mntmWordWrap.getSelection());
-			}
-		});
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                styledText.setWordWrap(mntmWordWrap.getSelection());
+            }
+        });
 
 		MenuItem mntmSyntax = new MenuItem(menu_6, SWT.CASCADE);
 		mntmSyntax.setText("Syntax");
@@ -297,14 +306,13 @@ public class AtlasTextApplication {
 
 		MenuItem mntmSelectAll_1 = new MenuItem(menu_4, SWT.NONE);
 		mntmSelectAll_1.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				selectAll();
-			}
-		});
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                selectAll();
+            }
+        });
 		mntmSelectAll_1.setText("Select All");
 		mntmSelectAll_1.setAccelerator(AcceleratorHelper.ATLAS_SELECT_ALL);
-		;
 
 		styledText = new StyledText(shlAtlas, SWT.V_SCROLL | SWT.H_SCROLL);
 		styledText.addLineBackgroundListener(new LineBackgroundListener() {
@@ -381,21 +389,6 @@ public class AtlasTextApplication {
 
 				parseSyntax(e);
 
-				// TODO - Implement Line numbering later
-				// int activeLine = styledText.getLineAtOffset(styledText.getCaretOffset());
-				// int currentLine = styledText.getLineAtOffset(event.lineOffset);
-				// event.bulletIndex = currentLine;
-				// int width = 36;
-				//
-				// if (styledText.getLineCount() > 999)
-				// width = (int) ((Math.floor(Math.log10(styledText.getLineCount())) + 1) * 12);
-				// // Set the style, 12 pixles wide for each digit
-				// StyleRange style = new StyleRange();
-				// style.metrics = new GlyphMetrics(0, 0, width);
-				// if (activeLine == currentLine) {
-				// // style.background = Theme.highlightedLineColor;
-				// }
-				// event.bullet = new Bullet(ST.BULLET_NUMBER, style);
 				e.bulletIndex = styledText.getLineAtOffset(e.lineOffset);
 
 				int oldWidth = lnWidth;
@@ -526,14 +519,6 @@ public class AtlasTextApplication {
 				formatCode(styledText);
 			}
 		});
-		// mntmPlainText.addSelectionListener(new SelectionAdapter() {
-		// @Override
-		// public void widgetSelected(SelectionEvent e) {
-		// preferenceManager.setPreference("language", "text");
-		// lblPlainText.setText("Plain text");
-		// styledText.redraw();
-		// }
-		// });
 	}
 
 	private Menu createSyntaxMenu(MenuItem menuItem) {
@@ -589,7 +574,7 @@ public class AtlasTextApplication {
 			case "Java":
 				return new JavaTokenReader();
 			case "C":
-//				return new CTokenReader();
+				return new CTokenReader();
 			default:
 				return new PlainTextTokenReader();
 		}
@@ -600,8 +585,6 @@ public class AtlasTextApplication {
 		fileDialog.setText("Open...");
 		String filePath = fileDialog.open();
 		if (filePath != null) {
-			// FIXME - Not the best design because of the tight coupling
-			// but it's 3AM... I'm tired :p
 			try {
 				styledText.setText(fileManager.openFile(filePath));
 			} catch (IOException e) {
@@ -645,11 +628,13 @@ public class AtlasTextApplication {
 		// updateWindowTitle();
 	}
 
+    /**
+     * @return the currently selected line
+     * This is usually the line where the cursor is
+     */
 	public int getCurrentLine(){
-		int pos = styledText.getCaretOffset();
-		// For readability, get the line number into a temp variable
-		int line = styledText.getLineAtOffset(pos);
-		return line;
+		int currentPosition = styledText.getCaretOffset();
+		return styledText.getLineAtOffset(currentPosition);
 	}
 
 	/**
@@ -680,5 +665,14 @@ public class AtlasTextApplication {
 		styledText.selectAll();
 	}
 
+    /**
+     *
+     */
+    private SelectionAdapter aboutSelectionAdapter = new SelectionAdapter() {
+        @Override
+        public void widgetSelected(SelectionEvent e) {
+            new AboutDialog(shlAtlas).open();
+        }
+    };
 
 }
