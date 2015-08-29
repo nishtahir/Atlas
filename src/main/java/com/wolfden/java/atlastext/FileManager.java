@@ -112,7 +112,7 @@ public class FileManager {
     private static File createFileFromPath(String path)
             throws FileAlreadyExistsException {
         File file = new File(path);
-        if (file.exists()) {
+        if (!file.exists()) {
             return file;
         } else {
             throw new FileAlreadyExistsException(

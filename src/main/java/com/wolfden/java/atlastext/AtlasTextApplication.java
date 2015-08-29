@@ -210,7 +210,6 @@ public class AtlasTextApplication {
 		MenuItem mntmSave = new MenuItem(menu_2, SWT.NONE);
 		mntmSave.setText("Save");
 		mntmSave.setAccelerator(AcceleratorHelper.ATLAS_SAVE);
-		;
 
 		MenuItem mntmSaveAs = new MenuItem(menu_2, SWT.NONE);
 		mntmSaveAs.addSelectionListener(new SelectionAdapter() {
@@ -221,7 +220,6 @@ public class AtlasTextApplication {
 		});
 		mntmSaveAs.setText("Save As...");
 		mntmSaveAs.setAccelerator(AcceleratorHelper.ATLAS_SAVE_AS);
-		;
 
 		MenuItem mntmEdit = new MenuItem(menu, SWT.CASCADE);
 		mntmEdit.setText("Edit");
@@ -232,7 +230,6 @@ public class AtlasTextApplication {
 		MenuItem mntmUndo = new MenuItem(menu_3, SWT.NONE);
 		mntmUndo.setText("Undo");
 		mntmUndo.setAccelerator(AcceleratorHelper.ATLAS_UNDO);
-		;
 
 		MenuItem mntmRedo = new MenuItem(menu_3, SWT.NONE);
 		mntmRedo.setText("Redo");
