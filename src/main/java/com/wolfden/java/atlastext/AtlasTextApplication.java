@@ -624,6 +624,7 @@ public class AtlasTextApplication {
 	 */
 	public void saveAs() {
 		FileDialog fileDialog = new FileDialog(shlAtlas, SWT.SAVE);
+		fileDialog.setOverwrite(true);
 		String fileName = fileManager.getActiveFileName();
 
 		if (fileName != null) {
@@ -637,7 +638,6 @@ public class AtlasTextApplication {
 				fileManager.saveFileAs(fileName, styledText.getText());
 				unsavedChanges = false;
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

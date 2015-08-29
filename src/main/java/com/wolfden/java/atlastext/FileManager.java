@@ -67,8 +67,8 @@ public class FileManager {
      * @param data
      * @throws IOException
      */
-    public void saveFileAs(String path, String data) throws IOException, FileAlreadyExistsException {
-        activeFile = createFileFromPath(path);
+    public void saveFileAs(String path, String data) throws IOException {
+        activeFile = new File(path);
         saveFile(data);
     }
 
@@ -77,9 +77,8 @@ public class FileManager {
      * @return
      * @throws IOException
      */
-    public String openFile(String path) throws IOException,
-            FileNotFoundException {
-        return openFile(createFileFromPath(path));
+    public String openFile(String path) throws IOException {
+        return openFile(new File(path));
     }
 
     /**
@@ -102,22 +101,6 @@ public class FileManager {
         }
         inputStream.close();
         return contentBuffer.toString();
-    }
-
-    /**
-     * @param path
-     * @return
-     * @throws FileAlreadyExistsException
-     */
-    private static File createFileFromPath(String path)
-            throws FileAlreadyExistsException {
-        File file = new File(path);
-        if (!file.exists()) {
-            return file;
-        } else {
-            throw new FileAlreadyExistsException(
-                    "A file already exists with that name");
-        }
     }
 
     /**

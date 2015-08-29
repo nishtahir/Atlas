@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import static junit.framework.TestCase.*;
 
@@ -60,8 +61,9 @@ public class FileManagerTest {
         fileManagerInstance.setActiveFile(null);
     }
 
-    @Test
-    public void testSaveFile(){
+    @Test(expected = NullPointerException.class)
+    public void testSaveFile_WithNoActiveFile_ThrowsNullPointerException() throws IOException {
+        fileManagerInstance.saveFile("test content");
     }
 
     @Test
@@ -88,4 +90,5 @@ public class FileManagerTest {
         String activeFileName = fileManagerInstance.getActiveFileName();
         assertEquals(file.getName(), activeFileName);
     }
+
 }
