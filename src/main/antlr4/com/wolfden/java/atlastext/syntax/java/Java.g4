@@ -40,10 +40,6 @@
  */
 grammar Java;
 
-@header {
-    package com.wolfden.java.atlastext.syntax.java;
-}
-
 // starting point for parsing a java file
 compilationUnit
     :   packageDeclaration? importDeclaration* typeDeclaration* EOF
