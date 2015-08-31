@@ -19,16 +19,18 @@
 * Apache Maven
 
 ### Setup
-Import the project into your favorite Java IDE.
 
 1. Import the project into your favorite IDE.
 
 2. Run the following command in the root of the project (the folder with *pom.xml*)
-    mvn generate-sources
+
+   ``` mvn generate-sources ```
+   
    This will generate files required to build the project
 
 3. (MacOSX only) In your run configuration add the following VM option
-    -XstartOnFirstThread
+
+   ``` -XstartOnFirstThread ```
 
 ### Contribution guidelines
 
