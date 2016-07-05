@@ -2,7 +2,7 @@
 
 **Atlas Text** is a decent text editor application with syntax highlighting.
 
-![atlas_screenshot_1.png](https://bitbucket.org/repo/d5b8M5/images/3113262366-atlas_screenshot_1.png)
+![atlas_screenshot_1.png](https://cloud.githubusercontent.com/assets/2018617/16593321/6b49c342-42ed-11e6-814e-19a8543f83d9.png)
 
 ### Why yet another text editor?
 
